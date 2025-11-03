@@ -13,10 +13,10 @@ author_email = "irodti93@gmail.com"
 [tool.briefcase.app.calcme]
 formal_name = "Calcme"
 description = "A calculator app with monitoring features"
-icon = "icon"
+icon = "logo"
 sources = ["calcme"]
 requires = [
-    "toga",
+    "toga-android",
     "requests",
 ]
 
@@ -40,4 +40,11 @@ build_gradle_dependencies = [
     "androidx.core:core-ktx:1.12.0",
     "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0",
     "androidx.activity:activity-ktx:1.8.2",
+    "androidx.appcompat:appcompat:1.6.1",
+    "com.google.android.material:material:1.11.0",
+]
+exclude_packages = [
+    "toga-gtk",
+    "pycairo",
+    "pygobject",
 ]

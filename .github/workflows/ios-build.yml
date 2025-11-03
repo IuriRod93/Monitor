@@ -1,0 +1,39 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install briefcase toga-ios requests
+
+    - name: Navigate to Spy-mobile directory
+      run: cd Spy-mobile
+
+    - name: Build iOS app
+      run: |
+        cd Spy-mobile
+        python -m briefcase build iOS
+
+    - name: Upload iOS artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ios-app
+        path: Spy-mobile/build/calcme/ios/
