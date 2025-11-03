@@ -30,20 +30,21 @@ jobs:
         cd Spy-mobile
         python -m briefcase create iOS
 
-    - name: Build iOS app
+    - name: Build iOS app for device
       run: |
         cd Spy-mobile
-        python -m briefcase build iOS
+        python -m briefcase build iOS --device
 
     - name: Package iOS app
       run: |
         cd Spy-mobile
-        python -m briefcase package iOS
+        python -m briefcase package iOS --device
 
     - name: List build artifacts
       run: |
         cd Spy-mobile
         find build -name "*.ipa" -o -name "*.app" | head -10
+        ls -la build/calcme/ios/
 
     - name: Upload iOS IPA artifact
       uses: actions/upload-artifact@v4
@@ -51,9 +52,8 @@ jobs:
         name: ios-ipa
         path: |
           Spy-mobile/build/calcme/ios/**/*.ipa
-          Spy-mobile/build/calcme/ios/**/*.app
         retention-days: 30
-        if-no-files-found: warn
+        if-no-files-found: error
 
     - name: Upload build logs
       uses: actions/upload-artifact@v4
