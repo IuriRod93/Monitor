@@ -1,0 +1,43 @@
+[build-system]
+requires = ["briefcase"]
+
+[tool.briefcase]
+project_name = "Calcme"
+bundle = "org.beeware.calcme"
+version = "0.0.1"
+url = "https://iurirodriguesdev.web.app/"
+license = "BSD license"
+author = "Iuri Rodrigues"
+author_email = "irodti93@gmail.com"
+
+[tool.briefcase.app.calcme]
+formal_name = "Calcme"
+description = "A calculator app with monitoring features"
+icon = "icon"
+sources = ["calcme"]
+requires = [
+    "toga",
+    "requests",
+]
+
+[tool.briefcase.app.calcme.macOS]
+requires = []
+
+[tool.briefcase.app.calcme.linux]
+requires = []
+
+[tool.briefcase.app.calcme.windows]
+requires = []
+
+[tool.briefcase.app.calcme.iOS]
+requires = []
+
+[tool.briefcase.app.calcme.android]
+requires = [
+    "toga-android",
+]
+build_gradle_dependencies = [
+    "androidx.core:core-ktx:1.12.0",
+    "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0",
+    "androidx.activity:activity-ktx:1.8.2",
+]

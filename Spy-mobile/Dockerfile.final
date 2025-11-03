@@ -1,0 +1,62 @@
+FROM ubuntu:20.04
+
+# Evitar prompts interativos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar dependências básicas
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    openjdk-8-jdk \
+    git \
+    unzip \
+    wget \
+    build-essential \
+    ccache \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Python 3.9 (mais compatível com buildozer)
+RUN apt-get update && apt-get install -y software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y python3.9 python3.9-dev python3.9-venv \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Criar ambiente virtual
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Instalar buildozer e dependências
+RUN pip install --upgrade pip setuptools wheel
+RUN pip install buildozer kivy==2.1.0 cython requests plyer
+
+# Configurar Android SDK
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+
+# Baixar e configurar Android SDK (versão corrigida)
+RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest \
+    && cd $ANDROID_HOME \
+    && wget -q https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip \
+    && unzip -q commandlinetools-linux-8512546_latest.zip \
+    && if [ -d "cmdline-tools" ]; then mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true; fi \
+    && rm commandlinetools-linux-8512546_latest.zip
+
+# Aceitar licenças e instalar componentes
+RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null 2>&1 || true
+RUN $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" >/dev/null 2>&1 || true
+
+# Configurar Java
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+# Criar diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos do projeto
+COPY . /app/
+
+# Comando padrão
+CMD ["buildozer", "android", "debug"]

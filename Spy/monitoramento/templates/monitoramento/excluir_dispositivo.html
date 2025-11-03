@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .excluir-box {
+        max-width: 420px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 18px #eee;
+        padding: 32px 28px;
+        text-align: center;
+    }
+    .excluir-box h1 { color: #b00; margin-bottom: 18px; }
+    .excluir-box button { background: #b00; color: #fff; border: none; border-radius: 6px; padding: 10px 28px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-right: 10px; }
+    .excluir-box button:hover { background: #900; }
+    .excluir-box .btn-cancelar { color: #b00; text-decoration: none; font-weight: bold; }
+</style>
+    <h1 style="color:#b00;">Excluir Dispositivo</h1>
+    <p>Tem certeza que deseja excluir o dispositivo <strong>{{ dispositivo.nome }}</strong> (IMEI: {{ dispositivo.imei }})?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="background:#b00;color:#fff;padding:8px 16px;border:none;border-radius:4px;">Excluir</button>
+        <a href="/" style="color:#b00;">Cancelar</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,61 @@
+# 🚀 COMANDOS SIMPLES PARA REINSTALAR WSL2
+
+## PARTE 1 - REMOVER WSL ANTIGO (CMD como Administrador):
+
+wsl --list --verbose
+wsl --unregister Ubuntu
+wsl --unregister Ubuntu-20.04
+wsl --unregister Ubuntu-22.04
+dism.exe /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /disable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+# REINICIAR COMPUTADOR
+
+## PARTE 2 - INSTALAR WSL2 (CMD como Administrador):
+
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+# REINICIAR COMPUTADOR NOVAMENTE
+
+## PARTE 3 - CONFIGURAR WSL2 (CMD como Administrador):
+
+# Baixar e instalar kernel WSL2 manualmente:
+# https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+
+wsl --set-default-version 2
+wsl --install -d Ubuntu-22.04
+
+# REINICIAR COMPUTADOR
+
+## PARTE 4 - CONFIGURAR UBUNTU (No terminal Ubuntu):
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install python3-pip openjdk-8-jdk git unzip wget build-essential -y
+pip3 install buildozer kivy[base] cython requests
+
+mkdir -p ~/android-sdk && cd ~/android-sdk
+wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+unzip commandlinetools-linux-8512546_latest.zip
+mkdir -p cmdline-tools/latest && mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+
+echo 'export ANDROID_HOME=~/android-sdk' >> ~/.bashrc
+echo 'export ANDROID_SDK_ROOT=~/android-sdk' >> ~/.bashrc
+echo 'export PATH=$PATH:~/android-sdk/cmdline-tools/latest/bin' >> ~/.bashrc
+echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.bashrc
+source ~/.bashrc
+
+yes | sdkmanager --licenses
+sdkmanager "platforms;android-30" "build-tools;30.0.3" "platform-tools"
+
+## PARTE 5 - CRIAR PROJETO E GERAR APK:
+
+mkdir ~/meu-app && cd ~/meu-app
+
+# Criar main.py (copie o código do GUIA_WSL_APK.md)
+# Criar buildozer.spec (copie o código do GUIA_WSL_APK.md)
+
+buildozer android debug
+cp bin/*.apk /mnt/c/Users/$USER/Desktop/SpyMobile.apk
+
+# ✅ APK PRONTO NO DESKTOP DO WINDOWS!

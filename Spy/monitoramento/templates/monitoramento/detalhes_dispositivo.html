@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .device-header { background: #b00; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .device-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+    .info-card { background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #b00; }
+    .info-label { font-weight: bold; color: #666; font-size: 0.9em; }
+    .info-value { font-size: 1.1em; margin-top: 5px; }
+    .section { margin-bottom: 30px; }
+    .section-title { color: #b00; font-size: 1.3em; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #b00; padding-bottom: 5px; }
+    .data-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .data-table th { background: #b00; color: white; padding: 12px; text-align: left; }
+    .data-table td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+    .data-table tr:hover { background: #f5f5f5; }
+    .btn { padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-right: 10px; }
+    .btn-primary { background: #b00; color: white; }
+    .btn-secondary { background: #6c757d; color: white; }
+    .status-online { color: #28a745; font-weight: bold; }
+    .status-offline { color: #dc3545; font-weight: bold; }
+    .location-item { background: #e9ecef; padding: 10px; margin: 5px 0; border-radius: 4px; }
+</style>
+
+<div class="device-header">
+    <h1>📱 Dispositivo: {{ dispositivo.nome|default:dispositivo.imei }}</h1>
+    <p>IMEI: {{ dispositivo.imei }} | IP: {{ dispositivo.ip }} | Última conexão: {{ dispositivo.ultima_conexao|date:"d/m/Y H:i:s" }}</p>
+</div>
+
+<div class="device-info">
+    <div class="info-card">
+        <div class="info-label">Status</div>
+        <div class="info-value">
+            {% if dispositivo.status == 'ativo' %}
+                <span class="status-online">🟢 Ativo</span>
+            {% else %}
+                <span class="status-offline">🔴 Inativo</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="info-card">
+        <div class="info-label">Usuário</div>
+        <div class="info-value">{{ dispositivo.usuario|default:"N/A" }}</div>
+    </div>
+    <div class="info-card">
+        <div class="info-label">Modelo</div>
+        <div class="info-value">{{ dispositivo.modelo|default:"N/A" }}</div>
+    </div>
+    <div class="info-card">
+        <div class="info-label">Departamento</div>
+        <div class="info-value">{{ dispositivo.departamento|default:"N/A" }}</div>
+    </div>
+    <div class="info-card">
+        <div class="info-label">Sistema Operacional</div>
+        <div class="info-value">{{ dispositivo.sistema_operacional|default:"N/A" }}</div>
+    </div>
+    <div class="info-card">
+        <div class="info-label">Data de Cadastro</div>
+        <div class="info-value">{{ dispositivo.criado_em|date:"d/m/Y H:i" }}</div>
+    </div>
+</div>
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'lista_dispositivos' %}" class="btn btn-secondary">← Voltar à Lista</a>
+    <a href="{% url 'mapa_localizacoes' dispositivo.imei %}" class="btn btn-primary">📍 Ver no Mapa</a>
+    <a href="{% url 'editar_dispositivo' dispositivo.imei %}" class="btn btn-primary">✏️ Editar</a>
+</div>
+
+<!-- Localizações Recentes -->
+<div class="section">
+    <div class="section-title">📍 Localizações Recentes</div>
+    {% if localizacoes %}
+        {% for loc in localizacoes %}
+        <div class="location-item">
+            <strong>{{ loc.data_hora|date:"d/m/Y H:i:s" }}</strong> - 
+            Lat: {{ loc.latitude|floatformat:6 }}, Lng: {{ loc.longitude|floatformat:6 }}
+            <a href="https://maps.google.com/?q={{ loc.latitude }},{{ loc.longitude }}" target="_blank" style="margin-left: 10px; color: #b00;">Ver no Google Maps</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Nenhuma localização registrada.</p>
+    {% endif %}
+</div>
+
+<!-- Contatos -->
+<div class="section">
+    <div class="section-title">📞 Contatos ({{ contatos.count }})</div>
+    {% if contatos %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Data de Coleta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contato in contatos %}
+                <tr>
+                    <td>{{ contato.nome }}</td>
+                    <td>{{ contato.telefone }}</td>
+                    <td>{{ contato.data_coleta|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum contato registrado.</p>
+    {% endif %}
+</div>
+
+<!-- SMS -->
+<div class="section">
+    <div class="section-title">💬 SMS Recentes ({{ sms.count }})</div>
+    {% if sms %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Remetente</th>
+                    <th>Destinatário</th>
+                    <th>Mensagem</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in sms %}
+                <tr>
+                    <td>
+                        {% if msg.tipo == 'enviado' %}
+                            <span style="color: #28a745;">📤 Enviado</span>
+                        {% else %}
+                            <span style="color: #007bff;">📥 Recebido</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ msg.remetente }}</td>
+                    <td>{{ msg.destinatario }}</td>
+                    <td>{{ msg.mensagem|truncatechars:50 }}</td>
+                    <td>{{ msg.data_envio|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum SMS registrado.</p>
+    {% endif %}
+</div>
+
+<!-- Chamadas -->
+<div class="section">
+    <div class="section-title">📞 Chamadas Recentes ({{ chamadas.count }})</div>
+    {% if chamadas %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Número</th>
+                    <th>Duração</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chamada in chamadas %}
+                <tr>
+                    <td>
+                        {% if chamada.tipo == 'entrada' %}
+                            <span style="color: #28a745;">📞 Entrada</span>
+                        {% elif chamada.tipo == 'saida' %}
+                            <span style="color: #007bff;">📱 Saída</span>
+                        {% else %}
+                            <span style="color: #dc3545;">❌ Perdida</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ chamada.numero }}</td>
+                    <td>{{ chamada.duracao }}s</td>
+                    <td>{{ chamada.data_chamada|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhuma chamada registrada.</p>
+    {% endif %}
+</div>
+
+<!-- Aplicativos -->
+<div class="section">
+    <div class="section-title">📱 Aplicativos Instalados ({{ aplicativos.count }})</div>
+    {% if aplicativos %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Pacote</th>
+                    <th>Versão</th>
+                    <th>Data de Coleta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in aplicativos %}
+                <tr>
+                    <td>{{ app.nome }}</td>
+                    <td><code>{{ app.pacote }}</code></td>
+                    <td>{{ app.versao|default:"N/A" }}</td>
+                    <td>{{ app.data_coleta|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum aplicativo registrado.</p>
+    {% endif %}
+</div>
+
+<!-- Mídias -->
+<div class="section">
+    <div class="section-title">🖼️ Mídias Coletadas ({{ midias.count }})</div>
+    {% if midias %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+            {% for midia in midias %}
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 10px; background: white;">
+                <div style="font-weight: bold; margin-bottom: 5px;">{{ midia.nome_arquivo }}</div>
+                <div style="color: #666; font-size: 0.9em;">{{ midia.tipo_midia|capfirst }}</div>
+                <div style="color: #666; font-size: 0.9em;">{{ midia.tamanho|filesizeformat }}</div>
+                <div style="color: #666; font-size: 0.9em;">{{ midia.data_upload|date:"d/m/Y H:i" }}</div>
+                {% if midia.arquivo %}
+                    {% if midia.tipo_midia == 'foto' %}
+                        <img src="{{ midia.arquivo.url }}" style="width: 100%; height: 120px; object-fit: cover; margin-top: 10px; border-radius: 4px;" alt="{{ midia.nome_arquivo }}">
+                    {% elif midia.tipo_midia == 'video' %}
+                        <video controls style="width: 100%; height: 120px; margin-top: 10px; border-radius: 4px;">
+                            <source src="{{ midia.arquivo.url }}" type="video/mp4">
+                            Seu navegador não suporta vídeo.
+                        </video>
+                    {% elif midia.tipo_midia == 'audio' %}
+                        <audio controls style="width: 100%; margin-top: 10px;">
+                            <source src="{{ midia.arquivo.url }}" type="audio/mpeg">
+                            Seu navegador não suporta áudio.
+                        </audio>
+                    {% endif %}
+                    <br>
+                    <a href="{{ midia.arquivo.url }}" target="_blank" download style="color: #b00; text-decoration: none; font-size: 0.9em;">📥 Baixar</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Nenhuma mídia coletada.</p>
+    {% endif %}
+</div>
+
+<!-- Redes Sociais -->
+<div class="section">
+    <div class="section-title">📱 Redes Sociais Instaladas ({{ redes_sociais.count }})</div>
+    {% if redes_sociais %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>App</th>
+                    <th>Pacote</th>
+                    <th>Status</th>
+                    <th>Última Atividade</th>
+                    <th>Data de Coleta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rede in redes_sociais %}
+                <tr>
+                    <td>
+                        {% if 'whatsapp' in rede.pacote %}
+                            💬 {{ rede.nome_app }}
+                        {% elif 'facebook' in rede.pacote %}
+                            📘 {{ rede.nome_app }}
+                        {% elif 'instagram' in rede.pacote %}
+                            📷 {{ rede.nome_app }}
+                        {% elif 'twitter' in rede.pacote %}
+                            🐦 {{ rede.nome_app }}
+                        {% elif 'telegram' in rede.pacote %}
+                            ✈️ {{ rede.nome_app }}
+                        {% else %}
+                            📱 {{ rede.nome_app }}
+                        {% endif %}
+                    </td>
+                    <td><code>{{ rede.pacote }}</code></td>
+                    <td>
+                        {% if rede.instalado %}
+                            <span style="color: #28a745;">✅ Instalado</span>
+                        {% else %}
+                            <span style="color: #dc3545;">❌ Removido</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ rede.ultima_atividade|date:"d/m/Y H:i"|default:"N/A" }}</td>
+                    <td>{{ rede.data_coleta|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhuma rede social detectada.</p>
+    {% endif %}
+</div>
+
+<!-- Atividades de Rede -->
+<div class="section">
+    <div class="section-title">🌐 Atividades de Rede ({{ atividades_rede.count }})</div>
+    {% if atividades_rede %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>IP Local</th>
+                    <th>IP Público</th>
+                    <th>Wi-Fi Status</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atividade in atividades_rede %}
+                <tr>
+                    <td>{{ atividade.ip_local }}</td>
+                    <td>{{ atividade.ip_publico|default:"N/A" }}</td>
+                    <td>{{ atividade.wifi_status|default:"N/A" }}</td>
+                    <td>{{ atividade.data_coleta|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhuma atividade de rede registrada.</p>
+    {% endif %}
+</div>
+
+<!-- Arquivos -->
+<div class="section">
+    <div class="section-title">📁 Arquivos Recentes ({{ arquivos.count }})</div>
+    {% if arquivos %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Tamanho</th>
+                    <th>Data de Upload</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for arquivo in arquivos %}
+                <tr>
+                    <td>{{ arquivo.nome_arquivo }}</td>
+                    <td>{{ arquivo.tipo_arquivo }}</td>
+                    <td>{{ arquivo.tamanho|filesizeformat }}</td>
+                    <td>{{ arquivo.data_upload|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if arquivo.arquivo %}
+                            <a href="{{ arquivo.arquivo.url }}" target="_blank" download="{{ arquivo.nome_arquivo }}" style="color: #b00; text-decoration: none; margin-right: 10px;">📥 Download</a>
+                            {% if arquivo.tipo_arquivo|lower == 'application/pdf' %}
+                                <a href="{{ arquivo.arquivo.url }}" target="_blank" style="color: #28a745; text-decoration: none;">👁️ Visualizar</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum arquivo registrado.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

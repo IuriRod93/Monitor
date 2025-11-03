@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .map-header { background: #b00; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    #map { height: 500px; width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .location-list { margin-top: 20px; }
+    .location-item { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #b00; }
+    .btn { padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-right: 10px; }
+    .btn-secondary { background: #6c757d; color: white; }
+</style>
+
+<div class="map-header">
+    <h1>📍 Mapa de Localizações - {{ dispositivo.nome|default:dispositivo.imei }}</h1>
+    <p>IMEI: {{ dispositivo.imei }} | Total de localizações: {{ localizacoes.count }}</p>
+</div>
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'detalhes_dispositivo' dispositivo.imei %}" class="btn btn-secondary">← Voltar aos Detalhes</a>
+</div>
+
+<div id="map"></div>
+
+<div class="location-list">
+    <h3 style="color: #b00;">Histórico de Localizações</h3>
+    {% for loc in localizacoes %}
+    <div class="location-item">
+        <strong>{{ loc.data_hora|date:"d/m/Y H:i:s" }}</strong><br>
+        Latitude: {{ loc.latitude|floatformat:6 }}<br>
+        Longitude: {{ loc.longitude|floatformat:6 }}<br>
+        <a href="https://maps.google.com/?q={{ loc.latitude }},{{ loc.longitude }}" target="_blank" style="color: #b00;">Ver no Google Maps</a>
+    </div>
+    {% empty %}
+    <p>Nenhuma localização registrada para este dispositivo.</p>
+    {% endfor %}
+</div>
+
+<script>
+function initMap() {
+    const locations = [
+        {% for loc in localizacoes %}
+        {
+            lat: {{ loc.latitude }},
+            lng: {{ loc.longitude }},
+            time: "{{ loc.data_hora|date:'d/m/Y H:i:s' }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    if (locations.length === 0) {
+        document.getElementById('map').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f8f9fa; color: #666; font-size: 18px;">Nenhuma localização disponível para exibir no mapa</div>';
+        return;
+    }
+
+    // Centro do mapa na primeira localização ou média das localizações
+    const centerLat = locations.reduce((sum, loc) => sum + loc.lat, 0) / locations.length;
+    const centerLng = locations.reduce((sum, loc) => sum + loc.lng, 0) / locations.length;
+
+    const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: { lat: centerLat, lng: centerLng },
+        mapTypeId: 'roadmap'
+    });
+
+    // Adicionar marcadores para cada localização
+    locations.forEach((location, index) => {
+        const marker = new google.maps.Marker({
+            position: { lat: location.lat, lng: location.lng },
+            map: map,
+            title: `Localização ${index + 1}: ${location.time}`,
+            label: (index + 1).toString()
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: `
+                <div>
+                    <h4>Localização ${index + 1}</h4>
+                    <p><strong>Data/Hora:</strong> ${location.time}</p>
+                    <p><strong>Coordenadas:</strong> ${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}</p>
+                </div>
+            `
+        });
+
+        marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+        });
+    });
+
+    // Desenhar linha conectando as localizações se houver mais de uma
+    if (locations.length > 1) {
+        const path = locations.map(loc => ({ lat: loc.lat, lng: loc.lng }));
+        
+        const polyline = new google.maps.Polyline({
+            path: path,
+            geodesic: true,
+            strokeColor: '#b00',
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+        });
+
+        polyline.setMap(map);
+    }
+}
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+
+<script>
+// Fallback caso não tenha API key do Google Maps
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        if (typeof google === 'undefined') {
+            document.getElementById('map').innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f8f9fa; color: #666; text-align: center; padding: 20px;">
+                    <h3>Mapa não disponível</h3>
+                    <p>Para visualizar o mapa, configure uma API key do Google Maps.</p>
+                    <p>As coordenadas estão listadas abaixo.</p>
+                </div>
+            `;
+        }
+    }, 2000);
+});
+</script>
+
+{% endblock %}

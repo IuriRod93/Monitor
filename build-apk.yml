@@ -1,0 +1,26 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build APK with Docker
+      run: |
+        docker build -f Dockerfile.codespaces -t spy-mobile-builder .
+        docker run --rm -v $PWD:/workspace spy-mobile-builder build-apk
+    
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: spy-mobile-apk
+        path: bin/*.apk

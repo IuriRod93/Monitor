@@ -1,0 +1,27 @@
+# COMANDOS PARA GOOGLE COLAB - SPY MOBILE APK BUILD
+
+# 1. CONFIGURAÇÃO INICIAL
+!apt update && apt install -y git zip unzip openjdk-8-jdk wget
+!pip install buildozer cython
+
+# 2. CONFIGURAR JAVA
+import os
+os.environ['JAVA_HOME'] = '/usr/lib/jvm/java-8-openjdk-amd64'
+
+# 3. FAZER UPLOAD DO ZIP
+from google.colab import files
+uploaded = files.upload()
+
+# 4. EXTRAIR ARQUIVOS
+!unzip spy_mobile_project.zip
+!ls -la
+
+# 5. GERAR APK
+!buildozer android debug
+
+# 6. BAIXAR APK
+files.download('bin/spymobile-0.1-arm64-v8a-debug.apk')
+
+# COMANDOS ALTERNATIVOS SE DER ERRO:
+# !buildozer android clean
+# !buildozer android debug --verbose

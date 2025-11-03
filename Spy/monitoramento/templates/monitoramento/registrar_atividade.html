@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Atividade</title>
+</head>
+<body>
+    <h1>Registrar Atividade</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label>Dispositivo:</label><br>
+        <select name="imei" required>
+            {% for dispositivo in dispositivos %}
+            <option value="{{ dispositivo.imei }}">{{ dispositivo.nome }} (IMEI: {{ dispositivo.imei }})</option>
+            {% endfor %}
+        </select><br>
+        <label>Descrição da atividade:</label><br>
+        <textarea name="descricao" required></textarea><br><br>
+        <button type="submit">Registrar</button>
+    </form>
+    <a href="/">Voltar</a>
+</body>
+</html>

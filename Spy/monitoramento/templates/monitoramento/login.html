@@ -1,0 +1,54 @@
+{% extends 'base_login.html' %}
+{% load static %}
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <svg class="login-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="loginLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                </linearGradient>
+                <filter id="loginShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
+                </filter>
+            </defs>
+            <circle cx="50" cy="50" r="48" fill="url(#loginLogoGrad)" stroke="white" stroke-width="2" filter="url(#loginShadow)"/>
+            <text x="50" y="35" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white" filter="url(#loginShadow)">IROD</text>
+            <text x="50" y="55" font-family="Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="white" filter="url(#loginShadow)">SPY</text>
+            <circle cx="50" cy="72" r="3" fill="white" opacity="0.9"/>
+            <circle cx="40" cy="72" r="2" fill="white" opacity="0.7"/>
+            <circle cx="60" cy="72" r="2" fill="white" opacity="0.7"/>
+            <circle cx="35" cy="75" r="1.5" fill="white" opacity="0.5"/>
+            <circle cx="65" cy="75" r="1.5" fill="white" opacity="0.5"/>
+        </svg>
+        <h1 class="login-title">IROD Spy</h1>
+        <p class="login-subtitle">Sistema de Monitoramento</p>
+    </div>
+    
+    {% if erro %}
+        <div class="alert-error">
+            <strong>Erro:</strong> {{ erro }}
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">👤 Usuário</label>
+            <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">🔒 Senha</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+        </div>
+        
+        <button type="submit" class="btn-login">🚀 Entrar no Sistema</button>
+    </form>
+    
+    <div class="footer-text">
+        Sistema seguro e protegido
+    </div>
+</div>
+{% endblock %}

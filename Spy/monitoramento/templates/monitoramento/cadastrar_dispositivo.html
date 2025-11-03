@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .cadastro-box {
+        max-width: 420px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 18px #eee;
+        padding: 32px 28px;
+    }
+    .cadastro-box h1 { color: #b00; text-align: center; margin-bottom: 24px; }
+    .cadastro-box label { font-weight: bold; color: #222; margin-top: 10px; }
+    .cadastro-box input, .cadastro-box select { width: 100%; padding: 9px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 14px; }
+    .cadastro-box button { width: 100%; background: #b00; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .cadastro-box button:hover { background: #900; }
+    .cadastro-box .btn-voltar { display: block; text-align: center; margin-top: 18px; color: #b00; text-decoration: none; font-weight: bold; }
+</style>
+    <h1 style="color:#b00;">Cadastrar Dispositivo</h1>
+    <form method="post" style="background:#f9f9f9;padding:20px;border-radius:8px;max-width:400px;">
+        {% csrf_token %}
+        <label>IMEI:</label><br>
+        <input type="text" name="imei" required style="width:100%;"><br>
+    <label>IP:</label><br>
+    <input type="text" name="ip" required style="width:100%;"><br>
+    <label>Gateway:</label><br>
+    <input type="text" name="gateway" style="width:100%;"><br>
+    <label>Máscara de rede:</label><br>
+    <input type="text" name="mascara_rede" style="width:100%;"><br>
+        <label>Nome:</label><br>
+        <input type="text" name="nome" style="width:100%;"><br>
+        <label>Usuário:</label><br>
+        <input type="text" name="usuario" style="width:100%;"><br>
+        <label>Modelo do aparelho:</label><br>
+        <input type="text" name="modelo" style="width:100%;"><br>
+        <label>Departamento/Setor:</label><br>
+        <input type="text" name="departamento" style="width:100%;"><br>
+        <label>Sistema Operacional:</label><br>
+        <input type="text" name="sistema_operacional" style="width:100%;"><br>
+        <label>Status:</label><br>
+        <select name="status" style="width:100%;">
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+        </select><br>
+        <label>Data de aquisição:</label><br>
+        <input type="date" name="data_aquisicao" style="width:100%;"><br><br>
+        <button type="submit" style="background:#b00;color:#fff;padding:8px 16px;border:none;border-radius:4px;">Cadastrar</button>
+    </form>
+    <a href="/" style="color:#b00;">Voltar</a>
+</body>
+</html>

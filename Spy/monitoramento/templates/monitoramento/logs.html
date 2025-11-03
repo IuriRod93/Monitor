@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 style="color:#b00;">Logs e Acessos dos Dispositivos</h2>
+<table style="border-collapse:collapse;width:100%;margin-top:20px;">
+    <tr style="background:#222;color:#fff;">
+        <th>IMEI</th>
+        <th>Nome</th>
+        <th>Usuário</th>
+        <th>Departamento</th>
+        <th>Modelo</th>
+        <th>Total de Acessos</th>
+        <th>Últimas Atividades</th>
+    </tr>
+    {% for dispositivo in dispositivos %}
+    <tr style="background:#f9f9f9;">
+        <td>{{ dispositivo.imei }}</td>
+        <td>{{ dispositivo.nome }}</td>
+        <td>{{ dispositivo.usuario }}</td>
+        <td>{{ dispositivo.departamento }}</td>
+        <td>{{ dispositivo.modelo }}</td>
+        <td>{{ dispositivo.atividades.count }}</td>
+        <td>
+            <ul style="margin:0;padding-left:18px;">
+            {% for atividade in dispositivo.atividades.all|slice:":5" %}
+                <li>{{ atividade.data_hora|date:"d/m/Y H:i" }} - {{ atividade.descricao }}</li>
+            {% empty %}
+                <li>Nenhuma atividade registrada</li>
+            {% endfor %}
+            </ul>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .editar-box {
+        max-width: 420px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 18px #eee;
+        padding: 32px 28px;
+    }
+    .editar-box h1 { color: #b00; text-align: center; margin-bottom: 24px; }
+    .editar-box label { font-weight: bold; color: #222; margin-top: 10px; }
+    .editar-box input, .editar-box select { width: 100%; padding: 9px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 14px; }
+    .editar-box button { width: 100%; background: #b00; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .editar-box button:hover { background: #900; }
+    .editar-box .btn-cancelar { display: block; text-align: center; margin-top: 18px; color: #b00; text-decoration: none; font-weight: bold; }
+</style>
+    <h1 style="color:#b00;">Editar Dispositivo</h1>
+    <form method="post" style="background:#f9f9f9;padding:20px;border-radius:8px;max-width:400px;">
+        {% csrf_token %}
+        <label>IMEI:</label><br>
+        <input type="text" name="imei" value="{{ dispositivo.imei }}" required style="width:100%;"><br>
+    <label>IP:</label><br>
+    <input type="text" name="ip" value="{{ dispositivo.ip }}" required style="width:100%;"><br>
+    <label>Gateway:</label><br>
+    <input type="text" name="gateway" value="{{ dispositivo.gateway }}" style="width:100%;"><br>
+    <label>Máscara de rede:</label><br>
+    <input type="text" name="mascara_rede" value="{{ dispositivo.mascara_rede }}" style="width:100%;"><br>
+        <label>Nome:</label><br>
+        <input type="text" name="nome" value="{{ dispositivo.nome }}" style="width:100%;"><br>
+        <label>Usuário:</label><br>
+        <input type="text" name="usuario" value="{{ dispositivo.usuario }}" style="width:100%;"><br>
+        <label>Modelo do aparelho:</label><br>
+        <input type="text" name="modelo" value="{{ dispositivo.modelo }}" style="width:100%;"><br>
+        <label>Departamento/Setor:</label><br>
+        <input type="text" name="departamento" value="{{ dispositivo.departamento }}" style="width:100%;"><br>
+        <label>Sistema Operacional:</label><br>
+        <input type="text" name="sistema_operacional" value="{{ dispositivo.sistema_operacional }}" style="width:100%;"><br>
+        <label>Status:</label><br>
+        <select name="status" style="width:100%;">
+            <option value="ativo" {% if dispositivo.status == 'ativo' %}selected{% endif %}>Ativo</option>
+            <option value="inativo" {% if dispositivo.status == 'inativo' %}selected{% endif %}>Inativo</option>
+        </select><br>
+        <label>Data de aquisição:</label><br>
+        <input type="date" name="data_aquisicao" value="{{ dispositivo.data_aquisicao|date:'Y-m-d' }}" style="width:100%;"><br><br>
+        <button type="submit" style="background:#b00;color:#fff;padding:8px 16px;border:none;border-radius:4px;">Salvar</button>
+        <a href="/" style="color:#b00;">Cancelar</a>
+    </form>
+</body>
+</html>

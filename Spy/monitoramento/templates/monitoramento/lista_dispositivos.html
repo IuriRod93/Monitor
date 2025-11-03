@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    h1 { color: #b00; margin-bottom: 20px; }
+    .btn { padding: 7px 18px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn-red { background: #b00; color: #fff; }
+    .btn-green { background: #090; color: #fff; }
+    .btn-gray { background: #555; color: #fff; }
+    .btn:hover { opacity: 0.85; }
+    .actions a { margin: 0 4px; text-decoration: none; font-weight: bold; }
+    .actions .btn-red, .actions .btn-green { font-size: 0.95em; padding: 5px 12px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; background: #fff; box-shadow: 0 2px 8px #eee; }
+    th, td { padding: 8px 6px; border: 1px solid #eee; text-align: left; }
+    th { background: #b00; color: #fff; }
+    tr:nth-child(even) { background: #f7f7f7; }
+    form input, form select { padding: 7px; border-radius: 4px; border: 1px solid #ccc; }
+    form { margin: 20px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .pagination { margin-top: 30px; text-align: center; }
+    .pagination a, .pagination strong { margin: 0 5px; font-size: 1.1em; }
+</style>
+    <h1 style="color:#b00;">Dispositivos Monitorados</h1>
+    <a href="/cadastrar/" style="color:#b00;">Cadastrar novo dispositivo</a>
+    <a href="/logs/" style="margin-left:20px;color:#222;font-weight:bold;">Ver logs e acessos</a>
+    <form method="get" style="margin:20px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+        <input type="text" name="imei" placeholder="IMEI" value="{{ request.GET.imei }}" style="padding:5px;">
+        <input type="text" name="ip" placeholder="IP" value="{{ request.GET.ip }}" style="padding:5px;">
+        <input type="text" name="usuario" placeholder="Usuário" value="{{ request.GET.usuario }}" style="padding:5px;">
+        <input type="text" name="departamento" placeholder="Departamento" value="{{ request.GET.departamento }}" style="padding:5px;">
+        <input type="text" name="status" placeholder="Status" value="{{ request.GET.status }}" style="padding:5px;">
+    <button type="submit" style="padding:5px 15px;background:#b00;color:#fff;border:none;">Filtrar</button>
+    <a href="?" style="margin-left:10px;color:#b00;">Limpar filtros</a>
+    <a href="{% url 'exportar_dispositivos_csv' %}?{{ request.GET.urlencode }}" style="margin-left:10px;padding:5px 15px;background:#090;color:#fff;text-decoration:none;border-radius:3px;">Exportar CSV</a>
+    </form>
+    <table style="border-collapse:collapse;width:100%;margin-top:20px;">
+        <tr style="background:#b00;color:#fff;">
+            <th>IMEI</th>
+            <th>IP</th>
+            <th>Nome</th>
+            <th>Usuário</th>
+            <th>Modelo</th>
+            <th>Departamento</th>
+            <th>Status</th>
+            <th>Última Conexão</th>
+            <th>Ações</th>
+        </tr>
+        {% for dispositivo in dispositivos %}
+        <tr style="background:#f9f9f9;">
+            <td><strong>{{ dispositivo.imei }}</strong></td>
+            <td>{{ dispositivo.ip }}</td>
+            <td>{{ dispositivo.nome|default:"N/A" }}</td>
+            <td>{{ dispositivo.usuario|default:"N/A" }}</td>
+            <td>{{ dispositivo.modelo|default:"N/A" }}</td>
+            <td>{{ dispositivo.departamento|default:"N/A" }}</td>
+            <td>
+                {% if dispositivo.status == 'ativo' %}
+                    <span style="color:#090;font-weight:bold;">● Ativo</span>
+                {% else %}
+                    <span style="color:#b00;font-weight:bold;">● Inativo</span>
+                {% endif %}
+            </td>
+            <td>{{ dispositivo.ultima_conexao|date:"d/m/Y H:i" }}</td>
+            <td class="actions">
+                <a href="{% url 'detalhes_dispositivo' dispositivo.imei %}" class="btn btn-green">Detalhes</a>
+                <a href="{% url 'atividades_dispositivo' dispositivo.imei %}" class="btn btn-gray">Atividades</a>
+                <a href="{% url 'editar_dispositivo' dispositivo.imei %}" class="btn btn-green">Editar</a>
+                <a href="{% url 'excluir_dispositivo' dispositivo.imei %}" class="btn btn-red">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="11">Nenhum dispositivo cadastrado.</td></tr>
+        {% endfor %}
+    </table>
+
+    {% if page_obj %}
+    <div style="margin-top:30px;text-align:center;">
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span><br>
+        {% if page_obj.has_previous %}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" style="margin-right:10px;">&laquo; Anterior</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <strong style="color:#b00;">{{ num }}</strong>
+            {% else %}
+                <a href="?{% for k,v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ num }}" style="margin:0 5px;">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?{% for k,v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" style="margin-left:10px;">Próxima &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock %}

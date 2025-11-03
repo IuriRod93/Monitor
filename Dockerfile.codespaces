@@ -1,0 +1,49 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip openjdk-8-jdk wget unzip git \
+    build-essential libffi-dev libssl-dev zlib1g-dev \
+    libbz2-dev libreadline-dev libsqlite3-dev curl \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+RUN pip3 install --no-cache-dir \
+    buildozer==1.4.0 kivy==2.1.0 requests==2.28.2 cython==0.29.33
+
+RUN mkdir -p /opt/android-sdk /opt/android-ndk
+
+RUN cd /opt/android-sdk && \
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip && \
+    unzip -q commandlinetools-linux-8512546_latest.zip && \
+    mkdir -p cmdline-tools/latest && \
+    mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true && \
+    rm commandlinetools-linux-8512546_latest.zip
+
+RUN cd /opt && \
+    wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip && \
+    unzip -q android-ndk-r25b-linux.zip && \
+    mv android-ndk-r25b android-ndk && \
+    rm android-ndk-r25b-linux.zip
+
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV ANDROID_NDK_HOME=/opt/android-ndk
+ENV NDK_HOME=/opt/android-ndk
+ENV PATH=$PATH:/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools
+
+RUN yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses && \
+    /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3" "platform-tools"
+
+RUN useradd -m -s /bin/bash codespace && \
+    chown -R codespace:codespace /opt/android-sdk /opt/android-ndk
+
+WORKDIR /workspace
+
+COPY build-apk.sh /usr/local/bin/build-apk
+RUN chmod +x /usr/local/bin/build-apk
+
+USER codespace
+CMD ["/bin/bash"]

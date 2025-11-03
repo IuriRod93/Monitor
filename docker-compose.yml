@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  apk-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.codespaces
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: build-apk
+    user: codespace

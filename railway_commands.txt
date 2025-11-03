@@ -1,0 +1,44 @@
+# 🚂 COMANDOS RAILWAY - COPIE E COLE
+
+## INSTALAÇÃO:
+npm install -g @railway/cli
+
+## SETUP INICIAL:
+cd C:\Users\Iuri\Desktop\Projetos\Monitoramento
+railway login
+railway init
+
+## GERAR APK:
+railway up
+railway logs --follow
+
+## COMANDOS ÚTEIS:
+railway list                 # Ver projetos
+railway logs                 # Ver logs
+railway logs --follow        # Logs em tempo real
+railway up --detach         # Deploy em background
+railway delete              # Deletar projeto
+railway logout              # Fazer logout
+
+## VERIFICAR STATUS:
+railway status
+railway ps
+
+## REDEPLOY:
+railway up
+
+## BAIXAR LOGS:
+railway logs > apk_build.log
+
+## VARIÁVEIS DE AMBIENTE:
+railway variables
+railway variables set KEY=value
+
+## CONECTAR A PROJETO EXISTENTE:
+railway link
+
+## VER INFORMAÇÕES DO PROJETO:
+railway info
+
+## ABRIR NO BROWSER:
+railway open

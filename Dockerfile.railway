@@ -1,0 +1,63 @@
+# Dockerfile otimizado para Railway
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar dependências
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    openjdk-8-jdk \
+    wget \
+    unzip \
+    git \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configurar Java
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+# Instalar dependências Python
+RUN pip3 install --no-cache-dir \
+    buildozer==1.4.0 \
+    kivy==2.1.0 \
+    requests \
+    cython==0.29.33
+
+# Baixar Android SDK
+RUN mkdir -p /opt/android-sdk && \
+    cd /opt/android-sdk && \
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip && \
+    unzip -q commandlinetools-linux-8512546_latest.zip && \
+    mkdir -p cmdline-tools/latest && \
+    mv cmdline-tools/* cmdline-tools/latest/ && \
+    rm commandlinetools-linux-8512546_latest.zip
+
+# Configurar variáveis de ambiente
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV PATH=$PATH:/opt/android-sdk/cmdline-tools/latest/bin
+
+# Aceitar licenças
+RUN yes | sdkmanager --licenses && \
+    sdkmanager "platforms;android-30" "build-tools;30.0.3"
+
+WORKDIR /app
+COPY . .
+
+# Script para gerar APK
+RUN echo '#!/bin/bash\n\
+echo "🚀 Gerando APK no Railway..."\n\
+buildozer android debug\n\
+if [ -f "bin/*.apk" ]; then\n\
+  echo "✅ APK gerado com sucesso!"\n\
+  ls -la bin/\n\
+  echo "📱 APK disponível para download"\n\
+else\n\
+  echo "❌ Erro na geração do APK"\n\
+fi\n\
+echo "🎯 Processo concluído!"' > /app/build.sh && \
+chmod +x /app/build.sh
+
+CMD ["/app/build.sh"]

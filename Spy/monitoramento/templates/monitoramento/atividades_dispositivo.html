@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Atividades do Dispositivo</title>
+</head>
+<body>
+    <h1 style="color:#b00;">Atividades de {{ dispositivo.nome }} (IMEI: {{ dispositivo.imei }})</h1>
+    <a href="/" style="color:#b00;">Voltar</a>
+    <table style="border-collapse:collapse;width:100%;margin-top:20px;">
+        <tr style="background:#b00;color:#fff;">
+            <th>Descrição</th>
+            <th>Data/Hora</th>
+        </tr>
+        {% for atividade in atividades %}
+        <tr style="background:#f9f9f9;">
+            <td>{{ atividade.descricao }}</td>
+            <td>{{ atividade.data_hora }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">Nenhuma atividade registrada.</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

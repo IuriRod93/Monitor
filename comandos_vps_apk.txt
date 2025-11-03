@@ -1,0 +1,51 @@
+# 📱 COMANDOS PARA GERAR APK NA VPS UBUNTU
+# Execute estes comandos na VPS (147.79.111.118) via SSH
+
+# 1. Atualizar sistema
+sudo apt update && sudo apt upgrade -y
+
+# 2. Instalar dependências básicas
+sudo apt install -y python3 python3-pip openjdk-8-jdk git unzip wget build-essential
+
+# 3. Instalar buildozer e kivy
+pip3 install buildozer kivy[base] cython requests plyer
+
+# 4. Configurar Android SDK
+mkdir -p ~/android-sdk/cmdline-tools
+cd ~/android-sdk
+
+# 5. Baixar Android SDK
+wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+unzip commandlinetools-linux-8512546_latest.zip
+mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+rm commandlinetools-linux-8512546_latest.zip
+
+# 6. Configurar variáveis de ambiente
+export ANDROID_HOME=~/android-sdk
+export ANDROID_SDK_ROOT=~/android-sdk
+export PATH=$PATH:~/android-sdk/cmdline-tools/latest/bin
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+# 7. Aceitar licenças do Android SDK
+yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+
+# 8. Instalar componentes necessários
+~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+
+# 9. Navegar para o diretório do projeto
+cd /opt/spy-monitor/Monitoramento/Spy-mobile
+
+# 10. Gerar APK
+buildozer android debug
+
+# 11. Verificar se APK foi gerado
+ls -la bin/
+
+# 12. (Opcional) Baixar APK para sua máquina local
+# scp root@147.79.111.118:/opt/spy-monitor/Monitoramento/Spy-mobile/bin/*.apk ./
+
+# NOTAS IMPORTANTES:
+# - O processo pode levar 15-30 minutos
+# - Certifique-se de ter espaço suficiente em disco (~5GB)
+# - Se houver erros, verifique os logs em .buildozer/android/platform/build/build.log
+# - Para limpar build anterior: rm -rf .buildozer bin/

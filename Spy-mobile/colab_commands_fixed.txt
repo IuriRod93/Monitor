@@ -1,0 +1,38 @@
+# COMANDOS CORRIGIDOS PARA GOOGLE COLAB
+
+# 1. CONFIGURAÇÃO INICIAL
+!apt update && apt install -y git zip unzip openjdk-8-jdk wget
+!pip install buildozer cython
+
+# 2. CONFIGURAR JAVA
+import os
+os.environ['JAVA_HOME'] = '/usr/lib/jvm/java-8-openjdk-amd64'
+
+# 3. FAZER UPLOAD DO ZIP
+from google.colab import files
+uploaded = files.upload()
+
+# 4. EXTRAIR E LIMPAR
+!unzip -o spy_mobile_project.zip
+!python colab_fix.py
+
+# 5. VERIFICAR ARQUIVOS
+!ls -la *.py
+!head -5 main.py
+!tail -5 main.py
+
+# 6. LIMPAR BUILD ANTERIOR
+!rm -rf .buildozer bin
+
+# 7. GERAR APK
+!buildozer android debug
+
+# 8. VERIFICAR APK GERADO
+!ls -la bin/
+
+# 9. BAIXAR APK
+files.download('bin/spymobile-0.1-arm64-v8a-debug.apk')
+
+# SE DER ERRO, USAR:
+# !buildozer android clean
+# !buildozer android debug --verbose
