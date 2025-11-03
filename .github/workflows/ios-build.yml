@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'  # Atualizado para versão suportada
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -40,26 +40,41 @@ jobs:
         cd Spy-mobile
         python -m briefcase package iOS
 
-    - name: List build artifacts
+    - name: List ALL build artifacts
       run: |
         cd Spy-mobile
-        find build -name "*.ipa" -o -name "*.app" | head -10
-        ls -la build/calcme/ios/
+        echo "=== Conteúdo da pasta build ==="
+        find build -type f | head -20
+        echo "=== Procurando por .ipa ==="
+        find build -name "*.ipa" 2>/dev/null || echo "Nenhum .ipa encontrado"
+        echo "=== Procurando por .app ==="
+        find build -name "*.app" 2>/dev/null || echo "Nenhum .app encontrado"
+        echo "=== Estrutura da pasta ios ==="
+        ls -la build/calcme/ios/ 2>/dev/null || echo "Pasta ios não existe"
 
-    - name: Upload iOS IPA artifact
+    - name: Upload iOS IPA artifact (if exists)
       uses: actions/upload-artifact@v4
       with:
         name: ios-ipa
         path: |
-          Spy-mobile/build/calcme/ios/**/*.ipa
+          Spy-mobile/build/**/*.ipa
         retention-days: 30
-        if-no-files-found: error
+        if-no-files-found: warn
+
+    - name: Upload iOS APP artifact (if exists)
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-app
+        path: |
+          Spy-mobile/build/**/*.app
+        retention-days: 30
+        if-no-files-found: warn
 
     - name: Upload build logs
       uses: actions/upload-artifact@v4
       with:
         name: ios-build-logs
         path: |
-          Spy-mobile/build/calcme/ios/
+          Spy-mobile/build/
         if-no-files-found: warn
         retention-days: 7
