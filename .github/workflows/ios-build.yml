@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.11'  # Atualizado para versão suportada
 
     - name: Install dependencies
       run: |
@@ -30,15 +30,15 @@ jobs:
         cd Spy-mobile
         python -m briefcase create iOS
 
-    - name: Build iOS app for device
+    - name: Build iOS app
       run: |
         cd Spy-mobile
-        python -m briefcase build iOS --device
+        python -m briefcase build iOS
 
     - name: Package iOS app
       run: |
         cd Spy-mobile
-        python -m briefcase package iOS --device
+        python -m briefcase package iOS
 
     - name: List build artifacts
       run: |
