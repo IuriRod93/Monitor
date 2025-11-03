@@ -1,0 +1,32 @@
+workflows:
+  ios-workflow:
+    name: iOS Build
+    environment:
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install Python and dependencies
+        script: |
+          python3 -m pip install --upgrade pip
+          pip3 install briefcase toga-ios requests
+      - name: Create iOS app
+        script: |
+          cd Spy-mobile
+          python3 -m briefcase create iOS
+      - name: Build iOS app
+        script: |
+          cd Spy-mobile
+          python3 -m briefcase build iOS
+      - name: Package iOS app
+        script: |
+          cd Spy-mobile
+          python3 -m briefcase package iOS --adhoc
+    artifacts:
+      - Spy-mobile/build/**/*.ipa
+      - Spy-mobile/build/**/*.app
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_ID
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: false
