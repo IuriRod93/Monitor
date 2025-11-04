@@ -17,16 +17,18 @@ workflows:
         script: |
           cd Spy-mobile
           python3 -m briefcase build iOS
-      - name: Package iOS app
+      - name: Generate IPA manually
         script: |
-          cd Spy-mobile
-          python3 -m briefcase package iOS --adhoc
+          cd Spy-mobile/build/calcme/ios
+          # Create IPA structure
+          mkdir -p Payload
+          cp -r Calcme.app Payload/
+          # Create IPA file
+          zip -r Calcme.ipa Payload
+          # List files to verify
+          ls -la
     artifacts:
       - Spy-mobile/build/**/*.ipa
       - Spy-mobile/build/**/*.app
-    publishing:
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: false
+      - Spy-mobile/build/**/*.zip
+      - Spy-mobile/build/calcme/ios/*.ipa
