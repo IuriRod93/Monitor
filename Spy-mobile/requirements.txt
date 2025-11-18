@@ -1,3 +1,2 @@
-kivy
-pyjnius
-requests
+# Minimal requirements for lightweight BeeWare APK
+requests>=2.28.0

@@ -2,50 +2,194 @@
 {% block content %}
 <style>
     .cadastro-box {
-        max-width: 420px;
+        max-width: 600px;
         margin: 40px auto;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 18px #eee;
-        padding: 32px 28px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        padding: 40px;
+        border: 1px solid rgba(255,255,255,0.2);
     }
-    .cadastro-box h1 { color: #b00; text-align: center; margin-bottom: 24px; }
-    .cadastro-box label { font-weight: bold; color: #222; margin-top: 10px; }
-    .cadastro-box input, .cadastro-box select { width: 100%; padding: 9px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 14px; }
-    .cadastro-box button { width: 100%; background: #b00; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-    .cadastro-box button:hover { background: #900; }
-    .cadastro-box .btn-voltar { display: block; text-align: center; margin-top: 18px; color: #b00; text-decoration: none; font-weight: bold; }
+    .cadastro-box h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.2em;
+        font-weight: 300;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .cadastro-box label {
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.95em;
+    }
+    .cadastro-box input, .cadastro-box select {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 2px solid #e1e8ed;
+        background: rgba(255,255,255,0.9);
+        font-size: 1em;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    .cadastro-box input:focus, .cadastro-box select:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        background: white;
+    }
+    .cadastro-box button {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 0;
+        font-size: 1.2em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    .cadastro-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+    .btn-voltar {
+        display: inline-block;
+        margin-top: 20px;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+    }
+    .btn-voltar:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-1px);
+    }
+    .required {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    .form-section {
+        background: rgba(255,255,255,0.7);
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    .section-title {
+        color: #2c3e50;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 8px;
+    }
 </style>
-    <h1 style="color:#b00;">Cadastrar Dispositivo</h1>
-    <form method="post" style="background:#f9f9f9;padding:20px;border-radius:8px;max-width:400px;">
+
+<div class="cadastro-box">
+    <h1>📱 Cadastrar Novo Dispositivo</h1>
+
+    <form method="post">
         {% csrf_token %}
-        <label>IMEI:</label><br>
-        <input type="text" name="imei" required style="width:100%;"><br>
-    <label>IP:</label><br>
-    <input type="text" name="ip" required style="width:100%;"><br>
-    <label>Gateway:</label><br>
-    <input type="text" name="gateway" style="width:100%;"><br>
-    <label>Máscara de rede:</label><br>
-    <input type="text" name="mascara_rede" style="width:100%;"><br>
-        <label>Nome:</label><br>
-        <input type="text" name="nome" style="width:100%;"><br>
-        <label>Usuário:</label><br>
-        <input type="text" name="usuario" style="width:100%;"><br>
-        <label>Modelo do aparelho:</label><br>
-        <input type="text" name="modelo" style="width:100%;"><br>
-        <label>Departamento/Setor:</label><br>
-        <input type="text" name="departamento" style="width:100%;"><br>
-        <label>Sistema Operacional:</label><br>
-        <input type="text" name="sistema_operacional" style="width:100%;"><br>
-        <label>Status:</label><br>
-        <select name="status" style="width:100%;">
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
-        </select><br>
-        <label>Data de aquisição:</label><br>
-        <input type="date" name="data_aquisicao" style="width:100%;"><br><br>
-        <button type="submit" style="background:#b00;color:#fff;padding:8px 16px;border:none;border-radius:4px;">Cadastrar</button>
+
+        <div class="form-section">
+            <div class="section-title">🔧 Informações Técnicas</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="imei">IMEI <span class="required">*</span></label>
+                    <input type="text" id="imei" name="imei" required placeholder="Digite o IMEI do dispositivo">
+                </div>
+                <div class="form-group">
+                    <label for="ip">IP <span class="required">*</span></label>
+                    <input type="text" id="ip" name="ip" required placeholder="192.168.1.100">
+                </div>
+                <div class="form-group">
+                    <label for="gateway">Gateway</label>
+                    <input type="text" id="gateway" name="gateway" placeholder="192.168.1.1">
+                </div>
+                <div class="form-group">
+                    <label for="mascara_rede">Máscara de Rede</label>
+                    <input type="text" id="mascara_rede" name="mascara_rede" placeholder="255.255.255.0">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-title">👤 Informações do Dispositivo</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nome">Nome do Dispositivo</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Celular João">
+                </div>
+                <div class="form-group">
+                    <label for="usuario">Usuário</label>
+                    <input type="text" id="usuario" name="usuario" placeholder="Nome do usuário">
+                </div>
+                <div class="form-group">
+                    <label for="modelo">Modelo do Aparelho</label>
+                    <input type="text" id="modelo" name="modelo" placeholder="Ex: Samsung Galaxy S21">
+                </div>
+                <div class="form-group">
+                    <label for="sistema_operacional">Sistema Operacional</label>
+                    <input type="text" id="sistema_operacional" name="sistema_operacional" placeholder="Ex: Android 12">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-title">🏢 Informações Organizacionais</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="departamento">Departamento/Setor</label>
+                    <input type="text" id="departamento" name="departamento" placeholder="Ex: Vendas, TI, RH">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="ativo">🟢 Ativo</option>
+                        <option value="inativo">🔴 Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="data_aquisicao">Data de Aquisição</label>
+                    <input type="date" id="data_aquisicao" name="data_aquisicao">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit">🚀 Cadastrar Dispositivo</button>
     </form>
-    <a href="/" style="color:#b00;">Voltar</a>
-</body>
-</html>
+
+    <a href="{% url 'lista_dispositivos' %}" class="btn-voltar">← Voltar à Lista</a>
+</div>
+
+{% if messages %}
+<div style="max-width: 600px; margin: 20px auto;">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

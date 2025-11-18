@@ -14,8 +14,14 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Instalar Gunicorn para produção
+RUN pip install gunicorn
+
 # Copiar código da aplicação
 COPY . .
+
+# Executar migrações do banco de dados
+RUN python manage.py migrate --noinput
 
 # Coletar arquivos estáticos
 RUN python manage.py collectstatic --noinput
@@ -28,5 +34,5 @@ USER app
 # Expor porta
 EXPOSE 8000
 
-# Comando para executar
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando para executar com Gunicorn
+CMD ["gunicorn", "spy.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

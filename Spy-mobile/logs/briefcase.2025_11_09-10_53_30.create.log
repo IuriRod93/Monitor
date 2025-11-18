@@ -1,0 +1,303 @@
+Date/Time:       2025-11-09 10:53:32 
+Command line:    C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\__main__.py create android --no-input --log -C git=false -C java_home=C:\Program Files\Java\jdk-17
+
+OS Release:      Windows 11
+OS Version:      10.0.26100
+Architecture:    AMD64
+Platform:        Windows-11-10.0.26100-SP0
+
+Python exe:      C:\Python313\python.exe
+Python version:  3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+Virtual env:     False
+Conda env:       False
+
+Briefcase:       0.3.25
+Target platform: android
+Target format:   gradle
+
+Environment Variables:
+	ALLUSERSPROFILE=C:\ProgramData
+	APPDATA=C:\Users\Iuri\AppData\Roaming
+	BLACKBOX_ACTIVE=true
+	CHOCOLATEYINSTALL=C:\ProgramData\chocolatey
+	CHOCOLATEYLASTPATHUPDATE=133887497030477345
+	CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_3332_LSSOMXUQUNBQLFOR
+	COLORTERM=truecolor
+	COMMONPROGRAMFILES=C:\Program Files\Common Files
+	COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files
+	COMMONPROGRAMW6432=C:\Program Files\Common Files
+	COMPUTERNAME=DESKTOP-13L7BV8
+	COMSPEC=C:\WINDOWS\system32\cmd.exe
+	DRIVERDATA=C:\Windows\System32\Drivers\DriverData
+	EFC_8088_1262719628=1
+	EFC_8088_1592913036=1
+	EFC_8088_2283032206=1
+	EFC_8088_2775293581=1
+	EFC_8088_3789132940=1
+	FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer
+	FPS_BROWSER_USER_PROFILE_STRING=Default
+	GIT_ASKPASS=********************
+	HOMEDRIVE=C:
+	HOMEPATH=\Users\Iuri
+	JAVA_HOME=C:\Program Files\Java\jdk-25
+	LANG=en_US.UTF-8
+	LOCALAPPDATA=C:\Users\Iuri\AppData\Local
+	LOGONSERVER=\\DESKTOP-13L7BV8
+	NUMBER_OF_PROCESSORS=4
+	ONEDRIVE=C:\Users\Iuri\OneDrive
+	OPENAI_API_KEY=********************
+	ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+	OS=Windows_NT
+	PATH=C:\Program Files\PowerShell\7;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Python313\Scripts\;C:\Python313\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\PowerShell\7\;C:\Users\Iuri\miniconda3\minconda.3;C:\Users\Iuri\miniconda3\minconda.3\Library\mingw-w64\bin;C:\Users\Iuri\miniconda3\minconda.3\Library\usr\bin;C:\Users\Iuri\miniconda3\minconda.3\Library\bin;C:\Users\Iuri\miniconda3\minconda.3\Scripts;C:\Users\Iuri\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\Iuri\AppData\Local\Programs\Python\Python312\;C:\Users\Iuri\AppData\Local\Microsoft\WindowsApps;C:\Users\Iuri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Iuri\AppData\Roaming\npm;C:\Program Files\heroku\bin;C:\Users\Iuri\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\Iuri\AppData\Local\Programs\Ollama;C:\Users\Iuri\AppData\Local\Programs\Fiddler;C:\Users\Iuri\.dotnet\tools;C:\Program Files\mitmproxy\bin;C:\Program Files\Java\jdk-25\bin;
+	PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW;.CPL
+	POWERSHELL_DISTRIBUTION_CHANNEL=MSI:Windows 10 Enterprise LTSC 2024
+	PROCESSOR_ARCHITECTURE=AMD64
+	PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 142 Stepping 9, GenuineIntel
+	PROCESSOR_LEVEL=6
+	PROCESSOR_REVISION=8e09
+	PROGRAMDATA=C:\ProgramData
+	PROGRAMFILES=C:\Program Files
+	PROGRAMFILES(X86)=C:\Program Files (x86)
+	PROGRAMW6432=C:\Program Files
+	PSMODULEPATH=C:\Users\Iuri\Documents\PowerShell\Modules;C:\Program Files\PowerShell\Modules;c:\program files\powershell\7\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+	PUBLIC=C:\Users\Public
+	SESSIONNAME=Console
+	SYSTEMDRIVE=C:
+	SYSTEMROOT=C:\WINDOWS
+	TEMP=C:\Users\Iuri\AppData\Local\Temp
+	TERM_PROGRAM=vscode
+	TERM_PROGRAM_VERSION=1.99.6
+	TMP=C:\Users\Iuri\AppData\Local\Temp
+	USERDOMAIN=DESKTOP-13L7BV8
+	USERDOMAIN_ROAMINGPROFILE=DESKTOP-13L7BV8
+	USERNAME=Iuri
+	USERPROFILE=C:\Users\Iuri
+	VBOX_MSI_INSTALL_PATH=C:\Program Files\Oracle\VirtualBox\
+	VSCODE_GIT_ASKPASS_EXTRA_ARGS=********************
+	VSCODE_GIT_ASKPASS_MAIN=********************
+	VSCODE_GIT_ASKPASS_NODE=********************
+	VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-190f844da1-sock
+	VSCODE_INJECTION=1
+	WINDIR=C:\WINDOWS
+	ZES_ENABLE_SYSMAN=1
+
+pyproject.toml:
+[build-system]
+requires = ["briefcase"]
+
+[tool.briefcase]
+project_name = "Calcme"
+bundle = "org.beeware.calcme"
+version = "1.2.0"
+url = "https://iurirodriguesdev.web.app/"
+license.file = "LICENSE"
+author = "Iuri Rodrigues"
+author_email = "irodti93@gmail.com"
+
+[tool.briefcase.app.calcme]
+formal_name = "Cronometro"
+description = "A monitoring app for device tracking"
+icon = "logo"
+sources = ["calcme", "."]
+requires = [
+    "toga-android",
+    "requests",
+    "pillow",
+    "plyer",
+    "psutil",
+]
+
+[tool.briefcase.app.calcme.macOS]
+requires = []
+
+[tool.briefcase.app.calcme.linux]
+requires = []
+
+[tool.briefcase.app.calcme.windows]
+requires = []
+
+[tool.briefcase.app.calcme.iOS]
+requires = []
+
+[tool.briefcase.app.calcme.android]
+requires = [
+    "toga-android",
+]
+build_gradle_dependencies = [
+    "androidx.core:core-ktx:1.12.0",
+    "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0",
+    "androidx.activity:activity-ktx:1.8.2",
+    "androidx.appcompat:appcompat:1.6.1",
+    "com.google.android.material:material:1.11.0",
+]
+exclude_packages = [
+    "toga-gtk",
+    "pycairo",
+    "pygobject",
+]
+permission_internet = true
+permission_access_network_state = true
+permission_access_wifi_state = true
+permission_access_fine_location = true
+permission_access_coarse_location = true
+permission_read_external_storage = true
+permission_write_external_storage = true
+permission_read_contacts = true
+permission_read_sms = true
+permission_read_call_log = true
+permission_read_phone_state = true
+permission_battery_stats = true
+permission_camera = true
+permission_record_audio = true
+permission_package_usage_stats = true
+permission_request_ignore_battery_optimizations = true
+
+Briefcase Log:
+[10:53:30]                                                                                                                                                            __main__.py:42
+           Briefcase configuration error: Unable to parse configuration override java_home=C:\Program Files\Java\jdk-17                                               __main__.py:43
+           Saving log... started                                                                                                                                      console.py:438
+
+Main thread traceback:
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\commands\base.py:117 in parse_config_overrides                                                            │
+│                                                                                                                                                                                  │
+│    114 │   │   │   │   │   raise BriefcaseConfigError("The app name cannot be overridden.")                                                                                      │
+│    115 │   │   │   │                                                                                                                                                             │
+│    116 │   │   │   │   # Now actually parse the value                                                                                                                            │
+│ ❱  117 │   │   │   │   overrides.update(tomllib.loads(override))                                                                                                                 │
+│    118 │   │   │   except ValueError as e:                                                                                                                                       │
+│    119 │   │   │   │   raise BriefcaseConfigError(                                                                                                                               │
+│    120 │   │   │   │   │   f"Unable to parse configuration override {override}"                                                                                                  │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────── locals ────────────────────────────────────╮                                                                                                │
+│ │                _ = 'C:\\Program Files\\Java\\jdk-17'                          │                                                                                                │
+│ │ config_overrides = ['git=false', 'java_home=C:\\Program Files\\Java\\jdk-17'] │                                                                                                │
+│ │              key = 'java_home'                                                │                                                                                                │
+│ │         override = 'java_home=C:\\Program Files\\Java\\jdk-17'                │                                                                                                │
+│ │        overrides = {'git': False}                                             │                                                                                                │
+│ ╰───────────────────────────────────────────────────────────────────────────────╯                                                                                                │
+│                                                                                                                                                                                  │
+│ C:\Python313\Lib\tomllib\_parser.py:102 in loads                                                                                                                                 │
+│                                                                                                                                                                                  │
+│    99 │   │   │   pos += 1                                                                                                                                                       │
+│   100 │   │   │   continue                                                                                                                                                       │
+│   101 │   │   if char in KEY_INITIAL_CHARS:                                                                                                                                      │
+│ ❱ 102 │   │   │   pos = key_value_rule(src, pos, out, header, parse_float)                                                                                                       │
+│   103 │   │   │   pos = skip_chars(src, pos, TOML_WS)                                                                                                                            │
+│   104 │   │   elif char == "[":                                                                                                                                                  │
+│   105 │   │   │   try:                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────╮                                  │
+│ │   char = 'j'                                                                                                                                │                                  │
+│ │ header = ()                                                                                                                                 │                                  │
+│ │    out = Output(data=<tomllib._parser.NestedDict object at 0x00000185A5F53110>, flags=<tomllib._parser.Flags object at 0x00000185A5F53250>) │                                  │
+│ │    pos = 0                                                                                                                                  │                                  │
+│ │      s = 'java_home=C:\\Program Files\\Java\\jdk-17'                                                                                        │                                  │
+│ │    src = 'java_home=C:\\Program Files\\Java\\jdk-17'                                                                                        │                                  │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                  │
+│                                                                                                                                                                                  │
+│ C:\Python313\Lib\tomllib\_parser.py:326 in key_value_rule                                                                                                                        │
+│                                                                                                                                                                                  │
+│   323 def key_value_rule(                                                                                                                                                        │
+│   324 │   src: str, pos: Pos, out: Output, header: Key, parse_float: ParseFloat                                                                                                  │
+│   325 ) -> Pos:                                                                                                                                                                  │
+│ ❱ 326 │   pos, key, value = parse_key_value_pair(src, pos, parse_float)                                                                                                          │
+│   327 │   key_parent, key_stem = key[:-1], key[-1]                                                                                                                               │
+│   328 │   abs_key_parent = header + key_parent                                                                                                                                   │
+│   329                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────╮                                  │
+│ │ header = ()                                                                                                                                 │                                  │
+│ │    out = Output(data=<tomllib._parser.NestedDict object at 0x00000185A5F53110>, flags=<tomllib._parser.Flags object at 0x00000185A5F53250>) │                                  │
+│ │    pos = 0                                                                                                                                  │                                  │
+│ │    src = 'java_home=C:\\Program Files\\Java\\jdk-17'                                                                                        │                                  │
+│ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                  │
+│                                                                                                                                                                                  │
+│ C:\Python313\Lib\tomllib\_parser.py:369 in parse_key_value_pair                                                                                                                  │
+│                                                                                                                                                                                  │
+│   366 │   │   raise suffixed_err(src, pos, "Expected '=' after a key in a key/value pair")     ╭────────────────────── locals ──────────────────────╮                            │
+│   367 │   pos += 1                                                                             │ char = '='                                         │                            │
+│   368 │   pos = skip_chars(src, pos, TOML_WS)                                                  │  key = ('java_home',)                              │                            │
+│ ❱ 369 │   pos, value = parse_value(src, pos, parse_float)                                      │  pos = 10                                          │                            │
+│   370 │   return pos, key, value                                                               │  src = 'java_home=C:\\Program Files\\Java\\jdk-17' │                            │
+│   371                                                                                          ╰────────────────────────────────────────────────────╯                            │
+│   372                                                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ C:\Python313\Lib\tomllib\_parser.py:649 in parse_value                                                                                                                           │
+│                                                                                                                                                                                  │
+│   646 │   if first_four in {"-inf", "+inf", "-nan", "+nan"}:                                   ╭─────────────────────────── locals ────────────────────────────╮                 │
+│   647 │   │   return pos + 4, parse_float(first_four)                                          │            char = 'C'                                         │                 │
+│   648 │                                                                                        │  datetime_match = None                                        │                 │
+│ ❱ 649 │   raise suffixed_err(src, pos, "Invalid value")                                        │      first_four = 'C:\\P'                                     │                 │
+│   650                                                                                          │     first_three = 'C:\\'                                      │                 │
+│   651                                                                                          │ localtime_match = None                                        │                 │
+│   652 def suffixed_err(src: str, pos: Pos, msg: str) -> TOMLDecodeError:                       │    number_match = None                                        │                 │
+│                                                                                                │             pos = 10                                          │                 │
+│                                                                                                │             src = 'java_home=C:\\Program Files\\Java\\jdk-17' │                 │
+│                                                                                                ╰───────────────────────────────────────────────────────────────╯                 │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+TOMLDecodeError: Invalid value (at line 1, column 11)
+
+The above exception was the direct cause of the following exception:
+
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\__main__.py:22 in main                                                                                    │
+│                                                                                                                                                                                  │
+│   19 │   try:                                                                                                                                                                    │
+│   20 │   │   Command, extra_cmdline = parse_cmdline(sys.argv[1:], console=console)                                                                                               │
+│   21 │   │   command = Command(console=console)                                                                                                                                  │
+│ ❱ 22 │   │   options, overrides = command.parse_options(extra=extra_cmdline)                                                                                                     │
+│   23 │   │   command.parse_config(                                                                                                                                               │
+│   24 │   │   │   Path.cwd() / "pyproject.toml",                                                                                                                                  │
+│   25 │   │   │   overrides=overrides,                                                                                                                                            │
+│                                                                                                                                                                                  │
+│ ╭───────────────────────────────────────────────────────── locals ─────────────────────────────────────────────────────────╮                                                     │
+│ │       command = <briefcase.platforms.android.gradle.GradleCreateCommand object at 0x00000185A5FC9D30>                    │                                                     │
+│ │       console = <briefcase.console.Console object at 0x00000185A2B72E40>                                                 │                                                     │
+│ │             e = BriefcaseConfigError('Unable to parse configuration override java_home=C:\\Program Files\\Java\\jdk-17') │                                                     │
+│ │ extra_cmdline = ['--no-input', '--log', '-C', 'git=false', '-C', 'java_home=C:\\Program Files\\Java\\jdk-17']            │                                                     │
+│ │        result = 100                                                                                                      │                                                     │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                     │
+│                                                                                                                                                                                  │
+│ C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\commands\base.py:873 in parse_options                                                                     │
+│                                                                                                                                                                                  │
+│    870 │   │   self.console.save_log = options.pop("save_log")                                                                                                                   │
+│    871 │   │                                                                                                                                                                     │
+│    872 │   │   # Parse the configuration overrides                                                                                                                               │
+│ ❱  873 │   │   overrides = parse_config_overrides(options.pop("config_overrides"))                                                                                               │
+│    874 │   │                                                                                                                                                                     │
+│    875 │   │   return options, overrides                                                                                                                                         │
+│    876                                                                                                                                                                           │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────────────────────────────────────────── locals ───────────────────────────────────────────────────────────────────────────────────╮ │
+│ │                       args = ['--no-input', '--log', '-C', 'git=false', '-C', 'java_home=C:\\Program Files\\Java\\jdk-17']                                                   │ │
+│ │             default_format = 'gradle'                                                                                                                                        │ │
+│ │                      extra = ['--no-input', '--log', '-C', 'git=false', '-C', 'java_home=C:\\Program Files\\Java\\jdk-17']                                                   │ │
+│ │                    formats = ['gradle (default)']                                                                                                                            │ │
+│ │                    options = {}                                                                                                                                              │ │
+│ │                     parser = ArgumentParser(prog='briefcase create android gradle', usage=None, description='Create and populate an Android Gradle project.\n\nSupported     │ │
+│ │                              formats:\n  gradle (default)', formatter_class=<function BaseCommand.parse_options.<locals>.<lambda> at 0x00000185A5FC28E0>,                    │ │
+│ │                              conflict_handler='error', add_help=True)                                                                                                        │ │
+│ │                       self = <briefcase.platforms.android.gradle.GradleCreateCommand object at 0x00000185A5FC9D30>                                                           │ │
+│ │ supported_formats_helptext = 'Supported formats:\n  gradle (default)'                                                                                                        │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                                                                                  │
+│ C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\commands\base.py:119 in parse_config_overrides                                                            │
+│                                                                                                                                                                                  │
+│    116 │   │   │   │   # Now actually parse the value                                                                                                                            │
+│    117 │   │   │   │   overrides.update(tomllib.loads(override))                                                                                                                 │
+│    118 │   │   │   except ValueError as e:                                                                                                                                       │
+│ ❱  119 │   │   │   │   raise BriefcaseConfigError(                                                                                                                               │
+│    120 │   │   │   │   │   f"Unable to parse configuration override {override}"                                                                                                  │
+│    121 │   │   │   │   ) from e                                                                                                                                                  │
+│    122 │   return overrides                                                                                                                                                      │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────── locals ────────────────────────────────────╮                                                                                                │
+│ │                _ = 'C:\\Program Files\\Java\\jdk-17'                          │                                                                                                │
+│ │ config_overrides = ['git=false', 'java_home=C:\\Program Files\\Java\\jdk-17'] │                                                                                                │
+│ │              key = 'java_home'                                                │                                                                                                │
+│ │         override = 'java_home=C:\\Program Files\\Java\\jdk-17'                │                                                                                                │
+│ │        overrides = {'git': False}                                             │                                                                                                │
+│ ╰───────────────────────────────────────────────────────────────────────────────╯                                                                                                │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+BriefcaseConfigError: Briefcase configuration error: Unable to parse configuration override java_home=C:\Program Files\Java\jdk-17

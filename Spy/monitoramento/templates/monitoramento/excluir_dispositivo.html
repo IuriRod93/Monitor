@@ -2,25 +2,146 @@
 {% block content %}
 <style>
     .excluir-box {
-        max-width: 420px;
+        max-width: 500px;
         margin: 40px auto;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 18px #eee;
-        padding: 32px 28px;
+        background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        padding: 40px;
         text-align: center;
+        border: 1px solid rgba(255,255,255,0.2);
+        position: relative;
+        overflow: hidden;
     }
-    .excluir-box h1 { color: #b00; margin-bottom: 18px; }
-    .excluir-box button { background: #b00; color: #fff; border: none; border-radius: 6px; padding: 10px 28px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-right: 10px; }
-    .excluir-box button:hover { background: #900; }
-    .excluir-box .btn-cancelar { color: #b00; text-decoration: none; font-weight: bold; }
+    .excluir-box::before {
+        content: '⚠️';
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 2em;
+        opacity: 0.3;
+    }
+    .excluir-box h1 {
+        color: #d63031;
+        margin-bottom: 20px;
+        font-size: 2em;
+        font-weight: 300;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .device-info {
+        background: rgba(255,255,255,0.8);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 4px solid #d63031;
+    }
+    .device-info h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+    .device-info p {
+        margin: 8px 0;
+        color: #34495e;
+        font-size: 1.1em;
+    }
+    .warning-text {
+        background: rgba(255,255,255,0.9);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border: 2px solid #fdcb6e;
+        color: #d63031;
+        font-weight: 600;
+    }
+    .excluir-box button {
+        background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-size: 1.2em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0 10px 20px 0;
+        box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3);
+    }
+    .excluir-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(214, 48, 49, 0.4);
+        background: linear-gradient(135deg, #d63031 0%, #e17055 100%);
+    }
+    .btn-cancelar {
+        display: inline-block;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 15px 30px;
+        border-radius: 10px;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+        background: rgba(255,255,255,0.9);
+    }
+    .btn-cancelar:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
 </style>
-    <h1 style="color:#b00;">Excluir Dispositivo</h1>
-    <p>Tem certeza que deseja excluir o dispositivo <strong>{{ dispositivo.nome }}</strong> (IMEI: {{ dispositivo.imei }})?</p>
-    <form method="post">
+
+<div class="excluir-box">
+    <h1>🗑️ Excluir Dispositivo</h1>
+
+    <div class="device-info">
+        <h3>📱 Informações do Dispositivo</h3>
+        <p><strong>Nome:</strong> {{ dispositivo.nome|default:"N/A" }}</p>
+        <p><strong>IMEI:</strong> {{ dispositivo.imei }}</p>
+        <p><strong>IP:</strong> {{ dispositivo.ip }}</p>
+        <p><strong>Modelo:</strong> {{ dispositivo.modelo|default:"N/A" }}</p>
+        <p><strong>Usuário:</strong> {{ dispositivo.usuario|default:"N/A" }}</p>
+        <p><strong>Status:</strong>
+            {% if dispositivo.status == 'ativo' %}
+                <span style="color: #27ae60; font-weight: bold;">🟢 Ativo</span>
+            {% else %}
+                <span style="color: #e74c3c; font-weight: bold;">🔴 Inativo</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="warning-text">
+        ⚠️ <strong>Atenção:</strong> Esta ação não pode ser desfeita!<br>
+        Todos os dados coletados deste dispositivo serão permanentemente removidos do sistema.
+    </div>
+
+    <p style="font-size: 1.1em; color: #2c3e50; margin-bottom: 30px;">
+        Tem certeza que deseja excluir o dispositivo <strong>"{{ dispositivo.nome|default:dispositivo.imei }}"?</strong>
+    </p>
+
+    <form method="post" style="display: inline;">
         {% csrf_token %}
-        <button type="submit" style="background:#b00;color:#fff;padding:8px 16px;border:none;border-radius:4px;">Excluir</button>
-        <a href="/" style="color:#b00;">Cancelar</a>
+        <div class="action-buttons">
+            <button type="submit">🗑️ Sim, Excluir Dispositivo</button>
+            <a href="{% url 'detalhes_dispositivo' dispositivo.imei %}" class="btn-cancelar">← Cancelar e Voltar</a>
+        </div>
     </form>
-</body>
-</html>
+</div>
+
+{% if messages %}
+<div style="max-width: 500px; margin: 20px auto;">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

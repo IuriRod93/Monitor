@@ -56,6 +56,43 @@
         <div class="info-label">Data de Cadastro</div>
         <div class="info-value">{{ dispositivo.criado_em|date:"d/m/Y H:i" }}</div>
     </div>
+    {% if dispositivo.bateria_nivel %}
+    <div class="info-card">
+        <div class="info-label">Bateria</div>
+        <div class="info-value">
+            {{ dispositivo.bateria_nivel }}%
+            {% if dispositivo.bateria_carregando %}
+                <span style="color: #28a745;">🔌 Carregando</span>
+            {% else %}
+                <span style="color: #6c757d;">🔋 Descarregando</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% if dispositivo.bateria_temperatura %}
+    <div class="info-card">
+        <div class="info-label">Temperatura da Bateria</div>
+        <div class="info-value">{{ dispositivo.bateria_temperatura }}°C</div>
+    </div>
+    {% endif %}
+    {% if dispositivo.armazenamento_total %}
+    <div class="info-card">
+        <div class="info-label">Armazenamento Total</div>
+        <div class="info-value">{{ dispositivo.armazenamento_total|filesizeformat }}</div>
+    </div>
+    {% endif %}
+    {% if dispositivo.armazenamento_usado %}
+    <div class="info-card">
+        <div class="info-label">Armazenamento Usado</div>
+        <div class="info-value">{{ dispositivo.armazenamento_usado|filesizeformat }}</div>
+    </div>
+    {% endif %}
+    {% if dispositivo.armazenamento_livre %}
+    <div class="info-card">
+        <div class="info-label">Armazenamento Livre</div>
+        <div class="info-value">{{ dispositivo.armazenamento_livre|filesizeformat }}</div>
+    </div>
+    {% endif %}
 </div>
 
 <div style="margin-bottom: 20px;">

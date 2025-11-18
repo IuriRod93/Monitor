@@ -15,6 +15,7 @@ urlpatterns = [
     path('cadastrar/', views.cadastrar_dispositivo, name='cadastrar_dispositivo'),
     
     # APIs para dispositivos móveis
+    path('api/test/', views.api_test, name='api_test'),
     path('api/atividade/', views.registrar_atividade, name='registrar_atividade'),
     path('api/localizacao/', views.api_localizacao, name='api_localizacao'),
     path('api/contatos/', views.api_contatos, name='api_contatos'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('api/upload/', views.api_upload, name='api_upload'),
     path('api/redes-sociais/', views.api_redes_sociais, name='api_redes_sociais'),
     path('api/atividade-rede/', views.api_atividade_rede, name='api_atividade_rede'),
+    path('api/device-info/', views.api_device_info, name='api_device_info'),
     
     # Views para exibir dados
     path('dispositivo/<str:imei>/', views.detalhes_dispositivo, name='detalhes_dispositivo'),

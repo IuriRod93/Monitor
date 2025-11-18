@@ -17,10 +17,26 @@ class Dispositivo(models.Model):
 	criado_em = models.DateTimeField(auto_now_add=True)
 	ultima_conexao = models.DateTimeField(auto_now=True)
 
+	# Novos campos para bateria e armazenamento
+	bateria_nivel = models.IntegerField(null=True, blank=True, help_text='Nível da bateria em porcentagem')
+	bateria_carregando = models.BooleanField(default=False, help_text='Se a bateria está carregando')
+	bateria_temperatura = models.FloatField(null=True, blank=True, help_text='Temperatura da bateria em Celsius')
+	armazenamento_total = models.BigIntegerField(null=True, blank=True, help_text='Armazenamento total em bytes')
+	armazenamento_usado = models.BigIntegerField(null=True, blank=True, help_text='Armazenamento usado em bytes')
+	armazenamento_livre = models.BigIntegerField(null=True, blank=True, help_text='Armazenamento livre em bytes')
+
+	class Meta:
+		indexes = [
+			models.Index(fields=['imei']),
+			models.Index(fields=['ip']),
+			models.Index(fields=['status']),
+			models.Index(fields=['ultima_conexao']),
+			models.Index(fields=['usuario']),
+			models.Index(fields=['departamento']),
+		]
+
 	def save(self, *args, **kwargs):
-		import re
-		# Limpar IMEI removendo todos os caracteres não numéricos
-		self.imei = re.sub(r'[^0-9]', '', str(self.imei))
+		# Removido limpeza automática do IMEI para permitir valores de teste
 		super().save(*args, **kwargs)
 
 	def __str__(self):

@@ -1,0 +1,214 @@
+Date/Time:       2025-11-09 17:05:22 
+Command line:    C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\__main__.py build android gradle --update-support --update-stub --update-resources --no-update
+
+OS Release:      Windows 11
+OS Version:      10.0.26100
+Architecture:    AMD64
+Platform:        Windows-11-10.0.26100-SP0
+
+Python exe:      C:\Python313\python.exe
+Python version:  3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+Virtual env:     False
+Conda env:       False
+
+Briefcase:       0.3.25
+Target platform: android
+Target format:   gradle
+
+Environment Variables:
+	ALLUSERSPROFILE=C:\ProgramData
+	APPDATA=C:\Users\Iuri\AppData\Roaming
+	BLACKBOX_ACTIVE=true
+	CHOCOLATEYINSTALL=C:\ProgramData\chocolatey
+	CHOCOLATEYLASTPATHUPDATE=133887497030477345
+	CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_3332_LSSOMXUQUNBQLFOR
+	COLORTERM=truecolor
+	COMMONPROGRAMFILES=C:\Program Files\Common Files
+	COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files
+	COMMONPROGRAMW6432=C:\Program Files\Common Files
+	COMPUTERNAME=DESKTOP-13L7BV8
+	COMSPEC=C:\WINDOWS\system32\cmd.exe
+	DRIVERDATA=C:\Windows\System32\Drivers\DriverData
+	EFC_8088_1262719628=1
+	EFC_8088_1592913036=1
+	EFC_8088_2283032206=1
+	EFC_8088_2775293581=1
+	EFC_8088_3789132940=1
+	FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer
+	FPS_BROWSER_USER_PROFILE_STRING=Default
+	GIT_ASKPASS=********************
+	HOMEDRIVE=C:
+	HOMEPATH=\Users\Iuri
+	JAVA_HOME=C:\Program Files\Java\jdk-25
+	LANG=en_US.UTF-8
+	LOCALAPPDATA=C:\Users\Iuri\AppData\Local
+	LOGONSERVER=\\DESKTOP-13L7BV8
+	NUMBER_OF_PROCESSORS=4
+	ONEDRIVE=C:\Users\Iuri\OneDrive
+	OPENAI_API_KEY=********************
+	ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+	OS=Windows_NT
+	PATH=C:\Program Files\PowerShell\7;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Python313\Scripts\;C:\Python313\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\PowerShell\7\;C:\Users\Iuri\miniconda3\minconda.3;C:\Users\Iuri\miniconda3\minconda.3\Library\mingw-w64\bin;C:\Users\Iuri\miniconda3\minconda.3\Library\usr\bin;C:\Users\Iuri\miniconda3\minconda.3\Library\bin;C:\Users\Iuri\miniconda3\minconda.3\Scripts;C:\Users\Iuri\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\Iuri\AppData\Local\Programs\Python\Python312\;C:\Users\Iuri\AppData\Local\Microsoft\WindowsApps;C:\Users\Iuri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Iuri\AppData\Roaming\npm;C:\Program Files\heroku\bin;C:\Users\Iuri\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\Iuri\AppData\Local\Programs\Ollama;C:\Users\Iuri\AppData\Local\Programs\Fiddler;C:\Users\Iuri\.dotnet\tools;C:\Program Files\mitmproxy\bin;C:\Program Files\Java\jdk-25\bin;
+	PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW;.CPL
+	POWERSHELL_DISTRIBUTION_CHANNEL=MSI:Windows 10 Enterprise LTSC 2024
+	PROCESSOR_ARCHITECTURE=AMD64
+	PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 142 Stepping 9, GenuineIntel
+	PROCESSOR_LEVEL=6
+	PROCESSOR_REVISION=8e09
+	PROGRAMDATA=C:\ProgramData
+	PROGRAMFILES=C:\Program Files
+	PROGRAMFILES(X86)=C:\Program Files (x86)
+	PROGRAMW6432=C:\Program Files
+	PSMODULEPATH=C:\Users\Iuri\Documents\PowerShell\Modules;C:\Program Files\PowerShell\Modules;c:\program files\powershell\7\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+	PUBLIC=C:\Users\Public
+	SESSIONNAME=Console
+	SYSTEMDRIVE=C:
+	SYSTEMROOT=C:\WINDOWS
+	TEMP=C:\Users\Iuri\AppData\Local\Temp
+	TERM_PROGRAM=vscode
+	TERM_PROGRAM_VERSION=1.99.6
+	TMP=C:\Users\Iuri\AppData\Local\Temp
+	USERDOMAIN=DESKTOP-13L7BV8
+	USERDOMAIN_ROAMINGPROFILE=DESKTOP-13L7BV8
+	USERNAME=Iuri
+	USERPROFILE=C:\Users\Iuri
+	VBOX_MSI_INSTALL_PATH=C:\Program Files\Oracle\VirtualBox\
+	VSCODE_GIT_ASKPASS_EXTRA_ARGS=********************
+	VSCODE_GIT_ASKPASS_MAIN=********************
+	VSCODE_GIT_ASKPASS_NODE=********************
+	VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-190f844da1-sock
+	VSCODE_INJECTION=1
+	WINDIR=C:\WINDOWS
+	ZES_ENABLE_SYSMAN=1
+
+pyproject.toml:
+[build-system]
+requires = ["briefcase"]
+
+[tool.briefcase]
+project_name = "Calcme"
+bundle = "org.beeware.calcme"
+version = "1.2.0"
+url = "https://iurirodriguesdev.web.app/"
+license.file = "LICENSE"
+author = "Iuri Rodrigues"
+author_email = "irodti93@gmail.com"
+
+[tool.briefcase.app.calcme]
+formal_name = "Cronometro"
+description = "A monitoring app for device tracking"
+icon = "logo"
+sources = ["calcme", "."]
+requires = [
+    "toga-android",
+    "requests",
+    "pillow",
+    "plyer",
+    "psutil",
+]
+
+[tool.briefcase.app.calcme.macOS]
+requires = []
+
+[tool.briefcase.app.calcme.linux]
+requires = []
+
+[tool.briefcase.app.calcme.windows]
+requires = []
+
+[tool.briefcase.app.calcme.iOS]
+requires = []
+
+[tool.briefcase.app.calcme.android]
+requires = [
+    "toga-android",
+]
+build_gradle_dependencies = [
+    "androidx.core:core-ktx:1.12.0",
+    "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0",
+    "androidx.activity:activity-ktx:1.8.2",
+    "androidx.appcompat:appcompat:1.6.1",
+    "com.google.android.material:material:1.11.0",
+]
+exclude_packages = [
+    "toga-gtk",
+    "pycairo",
+    "pygobject",
+]
+permission_internet = true
+permission_access_network_state = true
+permission_access_wifi_state = true
+permission_access_fine_location = true
+permission_access_coarse_location = true
+permission_read_external_storage = true
+permission_write_external_storage = true
+permission_read_contacts = true
+permission_read_sms = true
+permission_read_call_log = true
+permission_read_phone_state = true
+permission_battery_stats = true
+permission_camera = true
+permission_record_audio = true
+permission_package_usage_stats = true
+permission_request_ignore_battery_optimizations = true
+
+Briefcase Log:
+[17:05:21]                                                                                                                                                            __main__.py:42
+           Cannot specify both --update-resources and --no-update                                                                                                     __main__.py:43
+           Saving log... started                                                                                                                                      console.py:438
+
+Main thread traceback:
+╭─────────────────────────────────────────────────────────────────────── Traceback (most recent call last) ────────────────────────────────────────────────────────────────────────╮
+│ C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\__main__.py:27 in main                                                                                    │
+│                                                                                                                                                                                  │
+│   24 │   │   │   Path.cwd() / "pyproject.toml",                                                                                                                                  │
+│   25 │   │   │   overrides=overrides,                                                                                                                                            │
+│   26 │   │   )                                                                                                                                                                   │
+│ ❱ 27 │   │   command(**options)                                                                                                                                                  │
+│   28 │   except HelpText as e:                                                                                                                                                   │
+│   29 │   │   console.info()                                                                                                                                                      │
+│   30 │   │   console.info(str(e))                                                                                                                                                │
+│                                                                                                                                                                                  │
+│ ╭─────────────────────────────────────────────── locals ───────────────────────────────────────────────╮                                                                         │
+│ │       command = <briefcase.platforms.android.gradle.GradleBuildCommand object at 0x00000142CB4D9E80> │                                                                         │
+│ │       console = <briefcase.console.Console object at 0x00000142C8112E40>                             │                                                                         │
+│ │             e = BriefcaseCommandError('Cannot specify both --update-resources and --no-update')      │                                                                         │
+│ │ extra_cmdline = ['--update-support', '--update-stub', '--update-resources', '--no-update']           │                                                                         │
+│ │       options = {                                                                                    │                                                                         │
+│ │                 │   'update': False,                                                                 │                                                                         │
+│ │                 │   'update_requirements': False,                                                    │                                                                         │
+│ │                 │   'update_support': True,                                                          │                                                                         │
+│ │                 │   'update_stub': True,                                                             │                                                                         │
+│ │                 │   'update_resources': True,                                                        │                                                                         │
+│ │                 │   'no_update': True,                                                               │                                                                         │
+│ │                 │   'test_mode': False                                                               │                                                                         │
+│ │                 }                                                                                    │                                                                         │
+│ │     overrides = {}                                                                                   │                                                                         │
+│ │        result = 200                                                                                  │                                                                         │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                         │
+│                                                                                                                                                                                  │
+│ C:\Users\Iuri\AppData\Roaming\Python\Python313\site-packages\briefcase\commands\build.py:124 in __call__                                                                         │
+│                                                                                                                                                                                  │
+│   121 │   │   │   │   │   "Cannot specify both --update-requirements and --no-update"                                                                                            │
+│   122 │   │   │   │   )                                                                                                                                                          │
+│   123 │   │   │   if update_resources:                                                                                                                                           │
+│ ❱ 124 │   │   │   │   raise BriefcaseCommandError(                                                                                                                               │
+│   125 │   │   │   │   │   "Cannot specify both --update-resources and --no-update"                                                                                               │
+│   126 │   │   │   │   )                                                                                                                                                          │
+│   127 │   │   │   if update_support:                                                                                                                                             │
+│                                                                                                                                                                                  │
+│ ╭────────────────────────────────────────────────── locals ──────────────────────────────────────────────────╮                                                                   │
+│ │                 app = None                                                                                 │                                                                   │
+│ │            app_name = None                                                                                 │                                                                   │
+│ │           no_update = True                                                                                 │                                                                   │
+│ │             options = {}                                                                                   │                                                                   │
+│ │                self = <briefcase.platforms.android.gradle.GradleBuildCommand object at 0x00000142CB4D9E80> │                                                                   │
+│ │           test_mode = False                                                                                │                                                                   │
+│ │              update = False                                                                                │                                                                   │
+│ │ update_requirements = False                                                                                │                                                                   │
+│ │    update_resources = True                                                                                 │                                                                   │
+│ │         update_stub = True                                                                                 │                                                                   │
+│ │      update_support = True                                                                                 │                                                                   │
+│ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                                   │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+BriefcaseCommandError: Cannot specify both --update-resources and --no-update

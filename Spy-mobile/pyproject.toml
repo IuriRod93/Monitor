@@ -2,39 +2,213 @@
 requires = ["briefcase"]
 
 [tool.briefcase]
-project_name = "Calcme"
-bundle = "org.beeware.calcme"
-version = "0.0.1"
-url = "https://iurirodriguesdev.web.app/"
-license = "BSD license"
+project_name = "SpyMonitor"
+bundle = "org.beeware.spymonitor"
+version = "2.0.0"
+url = "https://147.79.111.118/"
+license.file = "LICENSE"
 author = "Iuri Rodrigues"
 author_email = "irodti93@gmail.com"
 
-[tool.briefcase.app.calcme]
-formal_name = "Calcme"
-description = "A calculator app with monitoring features"
+[tool.briefcase.app.spymonitor]
+formal_name = "Spy Monitor Pro"
+description = "Advanced device monitoring and data collection app"
 icon = "logo"
-sources = ["calcme"]
+sources = ["spymonitor"]
+main_module = "spymonitor.app_toga"
+requires = []
+url_scheme = "spymonitor"
+main_module = "spymonitor.app_toga"
+
+[tool.briefcase.app.spymonitor.macOS]
+requires = []
+
+[tool.briefcase.app.spymonitor.linux]
+requires = []
+
+[tool.briefcase.app.spymonitor.windows]
+requires = []
+
+[tool.briefcase.app.spymonitor.iOS]
 requires = [
-    "toga-android",
-    "requests",
+    "toga-core>=0.4.0",
+    "toga-iOS>=0.4.0",
+    "requests>=2.28.0",
 ]
 
-[tool.briefcase.app.calcme.macOS]
-requires = []
-
-[tool.briefcase.app.calcme.linux]
-requires = []
-
-[tool.briefcase.app.calcme.windows]
-requires = []
-
-[tool.briefcase.app.calcme.iOS]
-requires = []
-
-[tool.briefcase.app.calcme.android]
+[tool.briefcase.app.spymonitor.android]
 requires = [
-    "toga-android",
+    "toga-core>=0.4.0",
+    "toga-android>=0.4.0",
+    "requests>=2.28.0",
+    "plyer>=2.1.0",
+]
+exclude_packages = [
+    "toga-gtk",
+    "pycairo",
+    "pygobject",
+    "toga-winforms",
+    "toga-cocoa",
+    "toga-iOS",
+    "toga-core",
+    "gi",
+    "cairo",
+    "gtk",
+    "glib",
+    "gobject",
+    "atk",
+    "pango",
+    "gdk-pixbuf",
+    "gtk+",
+    "wxpython",
+    "pyqt5",
+    "pyqt6",
+    "tkinter",
+    "pygame",
+    "sdl",
+    "opencv-python",
+    "pillow",
+    "matplotlib",
+    "numpy",
+    "scipy",
+    "pandas",
+    "tensorflow",
+    "torch",
+    "scikit-learn",
+    "flask",
+    "django",
+    "fastapi",
+    "uvicorn",
+    "gunicorn",
+    "celery",
+    "redis",
+    "psycopg2",
+    "mysqlclient",
+    "sqlalchemy",
+    "alembic",
+    "pytest",
+    "black",
+    "flake8",
+    "mypy",
+    "sphinx",
+    "jupyter",
+    "notebook",
+    "ipykernel",
+    "ipywidgets",
+    "plotly",
+    "seaborn",
+    "bokeh",
+    "dash",
+    "streamlit",
+    "gradio",
+    "transformers",
+    "datasets",
+    "accelerate",
+    "diffusers",
+    "stable-diffusion",
+    "huggingface-hub",
+    "tokenizers",
+    "sentencepiece",
+    "protobuf",
+    "grpcio",
+    "grpcio-tools",
+    "google-api-python-client",
+    "google-auth",
+    "google-cloud",
+    "azure",
+    "boto3",
+    "awscli",
+    "docker",
+    "kubernetes",
+    "helm",
+    "terraform",
+    "ansible",
+    "puppet",
+    "chef",
+    "salt",
+    "vagrant",
+    "virtualenv",
+    "pipenv",
+    "poetry",
+    "setuptools",
+    "wheel",
+    "twine",
+    "build",
+    "pip-tools",
+    "pre-commit",
+    "gitpython",
+    "paramiko",
+    "fabric",
+    "scp",
+    "sftp",
+    "ftplib",
+    "imaplib",
+    "poplib",
+    "smtplib",
+    "telnetlib",
+    "xmlrpc",
+    "jsonrpc",
+    "zeromq",
+    "pika",
+    "kafka-python",
+    "confluent-kafka",
+    "pymongo",
+    "motor",
+    "elasticsearch",
+    "opensearch",
+    "influxdb",
+    "prometheus-client",
+    "statsd",
+    "datadog",
+    "sentry-sdk",
+    "rollbar",
+    "loguru",
+    "structlog",
+    "coloredlogs",
+    "rich",
+    "tqdm",
+    "progressbar2",
+    "alive-progress",
+    "click",
+    "typer",
+    "fire",
+    "argparse",
+    "optparse",
+    "getopt",
+    "configparser",
+    "toml",
+    "yaml",
+    "json5",
+    "hjson",
+    "ujson",
+    "orjson",
+    "msgpack",
+    "pickle",
+    "shelve",
+    "dbm",
+    "sqlite3",
+    "zodb",
+    "leveldb",
+    "rocksdb",
+    "lmdb",
+    "berkeleydb",
+    "couchdb",
+    "pouchdb",
+    "realm",
+    "tinydb",
+    "zippydb",
+    "s3fs",
+    "gcsfs",
+    "adlfs",
+    "abfs",
+    "webhdfs",
+    "hdfs",
+    "ftpfs",
+    "sftpfs",
+    "smbclient",
+    "meson",
+    "ninja",
+    "meson-python",
 ]
 build_gradle_dependencies = [
     "androidx.core:core-ktx:1.12.0",
@@ -42,9 +216,20 @@ build_gradle_dependencies = [
     "androidx.activity:activity-ktx:1.8.2",
     "androidx.appcompat:appcompat:1.6.1",
     "com.google.android.material:material:1.11.0",
+    "androidx.work:work-runtime:2.8.1",
 ]
-exclude_packages = [
-    "toga-gtk",
-    "pycairo",
-    "pygobject",
-]
+permission_internet = true
+permission_access_fine_location = true
+permission_access_coarse_location = true
+permission_read_phone_state = true
+permission_read_external_storage = true
+permission_write_external_storage = true
+permission_camera = true
+permission_record_audio = true
+permission_read_contacts = true
+permission_read_sms = true
+permission_read_call_log = true
+permission_access_network_state = true
+permission_access_wifi_state = true
+permission_wake_lock = true
+permission_receive_boot_completed = true

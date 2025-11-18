@@ -1,115 +1,51 @@
-from kivy.utils import platform
-import time
+"""
+Screenshot utilities for capturing device screens
+"""
+import logging
 import os
+import time
 
-if platform == 'android':
-    from jnius import autoclass
-    
-    def take_screenshot():
-        """Captura tela de forma discreta"""
-        try:
-            # Método 1: MediaProjection (Android 5+)
-            PythonActivity = autoclass('org.kivy.android.PythonActivity')
-            activity = PythonActivity.mActivity
-            
-            # Criar nome único para screenshot
-            timestamp = int(time.time())
-            filename = f"screenshot_{timestamp}.png"
-            
-            # Caminho para salvar
-            storage_path = "/storage/emulated/0/Android/data/com.empresa.ponto/files/"
-            if not os.path.exists(storage_path):
-                os.makedirs(storage_path, exist_ok=True)
-            
-            filepath = os.path.join(storage_path, filename)
-            
-            # Tentar captura usando shell command (requer root ou permissões especiais)
-            try:
-                Runtime = autoclass('java.lang.Runtime')
-                runtime = Runtime.getRuntime()
-                
-                # Comando para screenshot
-                cmd = f"screencap -p {filepath}"
-                process = runtime.exec(cmd)
-                process.waitFor()
-                
-                if os.path.exists(filepath):
-                    return filepath
-                    
-            except Exception as e:
-                print(f"Método shell falhou: {e}")
-            
-            # Método 2: Usando View.draw (limitado)
-            try:
-                from android.runnable import run_on_ui_thread
-                
-                @run_on_ui_thread
-                def capture_view():
-                    try:
-                        # Obter view raiz
-                        decorView = activity.getWindow().getDecorView()
-                        
-                        # Criar bitmap
-                        Bitmap = autoclass('android.graphics.Bitmap')
-                        Canvas = autoclass('android.graphics.Canvas')
-                        
-                        bitmap = Bitmap.createBitmap(
-                            decorView.getWidth(),
-                            decorView.getHeight(),
-                            Bitmap.Config.ARGB_8888
-                        )
-                        
-                        canvas = Canvas(bitmap)
-                        decorView.draw(canvas)
-                        
-                        # Salvar bitmap
-                        FileOutputStream = autoclass('java.io.FileOutputStream')
-                        fos = FileOutputStream(filepath)
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos)
-                        fos.close()
-                        
-                        return filepath
-                        
-                    except Exception as e:
-                        print(f"Erro na captura de view: {e}")
-                        return None
-                
-                return capture_view()
-                
-            except Exception as e:
-                print(f"Método view falhou: {e}")
-            
-            return None
-            
-        except Exception as e:
-            print(f"Erro geral na captura: {e}")
-            return None
-    
-    def take_discrete_screenshot():
-        """Captura tela de forma ainda mais discreta"""
-        try:
-            # Usar thread separada para não bloquear UI
-            import threading
-            
-            result = [None]
-            
-            def capture_thread():
-                result[0] = take_screenshot()
-            
-            thread = threading.Thread(target=capture_thread)
-            thread.daemon = True
-            thread.start()
-            thread.join(timeout=3)  # Timeout de 3 segundos
-            
-            return result[0]
-            
-        except Exception as e:
-            print(f"Erro na captura discreta: {e}")
+logger = logging.getLogger(__name__)
+
+def take_discrete_screenshot():
+    """
+    Take a discrete screenshot using plyer
+    Returns: path to screenshot file or None
+    """
+    try:
+        from plyer import screenshot
+        import time
+
+        # Take screenshot
+        screenshot_path = screenshot.take_screenshot()
+        if screenshot_path and os.path.exists(screenshot_path):
+            logger.info(f"Screenshot taken: {screenshot_path}")
+            return screenshot_path
+        else:
+            logger.warning("Screenshot not taken or file not found")
             return None
 
-else:
-    def take_screenshot():
+    except ImportError:
+        logger.warning("plyer not available for screenshots, using PIL placeholder")
+        try:
+            from PIL import Image, ImageDraw
+            img = Image.new('RGB', (800, 600), color='white')
+            draw = ImageDraw.Draw(img)
+            draw.text((10, 10), f"Screenshot - {time.time()}", fill='black')
+            screenshot_path = f"screenshot_{int(time.time())}.png"
+            img.save(screenshot_path)
+            logger.info(f"Placeholder screenshot saved: {screenshot_path}")
+            return screenshot_path
+        except Exception as e:
+            logger.error(f"Placeholder screenshot error: {e}")
+            return None
+    except Exception as e:
+        logger.error(f"Screenshot error: {e}")
         return None
-    
-    def take_discrete_screenshot():
-        return None
+
+def take_automatic_screenshot():
+    """
+    Take automatic screenshot for monitoring
+    Returns: path to screenshot file or None
+    """
+    return take_discrete_screenshot()
